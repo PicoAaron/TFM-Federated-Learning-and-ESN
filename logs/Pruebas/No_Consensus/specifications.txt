@@ -1,0 +1,10 @@
+Type: No Consensus
+
+Neurons: 50
+
+Consensus: No
+Weighted: No
+No Consensus, only train
+
+Train: 250 steps
+Test: 250 steps
