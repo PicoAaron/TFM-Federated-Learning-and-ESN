@@ -1,0 +1,6 @@
+Inicio
+----------------
+
+Entrenamiento 0: 8.687682151794434
+Entrenamiento 0 WITH NO CONSENSUS: 8.696213722229004
+

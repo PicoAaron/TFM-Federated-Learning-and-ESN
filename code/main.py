@@ -26,7 +26,7 @@ import esn
 from esn import ESN, test
 
 import dataset
-from dataset import adjacency, wind_data, sequence_many
+from dataset import adjacency, adjacency_radius, wind_data, sequence_many
 
 import write
 from write import write, write_evaluation, write_weights
@@ -78,10 +78,10 @@ class NodeAgent(Agent):
 
     async def setup(self):
         self.model = ESN()
+        #self.model_cons_w = ESN()
         self.model_no_cons = ESN()
-        self.model_cons_w = ESN()
-
-        self.model_cons_w.set_weights( self.model.get_weights() )
+        
+        #self.model_cons_w.set_weights( self.model.get_weights() )
         self.model_no_cons.set_weights( self.model.get_weights() )
 
         #write(f'{self.jid}_train', 'w', self.x)
@@ -107,7 +107,7 @@ class NodeAgent(Agent):
 
 def prepare_network_antig(n):
 
-    data = pd.read_csv("./aemo_2018.csv", sep=',', header=0)
+    data = pd.read_csv("../data/aemo_2018.csv", sep=',', header=0)
 
     test_x, test_y = sequence_many(data, 15, 30)
 
@@ -135,54 +135,17 @@ def prepare_network_antig(n):
 
     return agents
 
-'''
-def prepare_network(n):
-    
-    data = pd.read_csv("./aemo_2018.csv", sep=',', header=0)
-
-    with open('data_network.json') as file:
-        data_network = json.load(file)
-
-    A, neighbors_list = adjacency(data_network, 3)
-    #print(A)
-    agents = []
-
-    for node in data_network:
-
-        neighbors = []
-        #print(neighbors)
-        for neighbor in neighbors_list[node]:
-            neighbors.append( f'{neighbor.lower()}@localhost' )
-
-        #print(neighbors)
-        x_train, y_train, x_test, y_test  = wind_data( data, node, 80 )
-
-        x_test, y_test = sequence_many(data, 15, 30)
-
-        print(f'x_train: {len(x_train)}')
-        print(f'x_test: {len(x_test)}')
-
-        #print(f'{node.lower()}: {neighbors}')
-        
-        senderagent = NodeAgent(f'{node.lower()}@localhost', "sender_password", n, 5, 5, neighbors, A, x_train, y_train, x_test, y_test)
-        agents.append(senderagent)
-        senderagent.start()
-        #senderagent.web.start(hostname="127.0.0.1", port=f'1000{i}')
-
-    return agents
-'''
-
 
 def prepare_network(n):
     
-    data = pd.read_csv("./aemo_2018.csv", sep=',', header=0)
+    data = pd.read_csv("../data/aemo_2018.csv", sep=',', header=0)
 
-    with open('data_network.json') as file:
+    with open('../data/data_network.json') as file:
         data_network = json.load(file)
 
     agents = []
 
-    A, neighbors_list = adjacency(data_network, 2)
+    A, neighbors_list, pos = adjacency_radius(data_network, 4)
     '''A = np.array([[0, 1, 1, 0],
                   [1, 0, 1, 0],
                   [1, 1, 0, 1],
@@ -195,7 +158,7 @@ def prepare_network(n):
                         'BOCORWF1': ['bluff1@localhost']
     }'''
 
-    print(A)
+    #print(A)
 
     global_test_x, global_test_y = sequence_many(data, 5, 30)
 
@@ -204,7 +167,7 @@ def prepare_network(n):
         neighbors = []
         for neighbor in neighbors_list[node]:
             neighbors.append( f'{neighbor.lower()}@localhost' )
-        print(neighbors)
+        #print(neighbors)
         
         x_train, y_train, x_test, y_test  = wind_data( data, node, 80 )
 
@@ -215,7 +178,7 @@ def prepare_network(n):
 
         #print(f'{node.lower()}: {neighbors}')
         
-        senderagent = NodeAgent(f'{node.lower()}@localhost', "sender_password", n, 5, 5, neighbors, A, x_train, y_train, x_test, y_test, global_test_x, global_test_y)
+        senderagent = NodeAgent(f'{node.lower()}@localhost', "sender_password", n, 5, 15, neighbors, A, x_train, y_train, x_test, y_test, global_test_x, global_test_y)
         agents.append(senderagent)
         senderagent.start()
         #senderagent.web.start(hostname="127.0.0.1", port=f'1000{i}')
@@ -244,18 +207,19 @@ if __name__ == "__main__":
                     plt.ylabel('loss')
                     plt.xlabel('epoch')
                     plt.legend(['train', 'test'], loc='upper left')
-                    plt.savefig(f'logs/images/all')
+                    plt.savefig(f'../logs/images/all')
                 
                 for agent in agents:
                     plt.figure()
                     plt.plot(agent.saved_history['val_loss'])
-                    plt.plot(agent.saved_history_cons_w['val_loss'])
+                    #plt.plot(agent.saved_history_cons_w['val_loss'])
                     plt.plot(agent.saved_history_no_cons['val_loss'])
                     plt.title('model val_loss')
                     plt.ylabel('loss')
                     plt.xlabel('epoch')
-                    plt.legend(['Consensus', 'Consensus Weighted', 'No Consensus'], loc='upper left')
-                    plt.savefig(f'logs/images/{agent.jid}')
+                    #plt.legend(['Consensus', 'Consensus Weighted', 'No Consensus'], loc='upper left')
+                    plt.legend(['Consensus', 'No Consensus'], loc='upper left')
+                    plt.savefig(f'../logs/images/{agent.jid}')
 
                 break
 

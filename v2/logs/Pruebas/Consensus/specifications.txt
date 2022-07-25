@@ -1,0 +1,10 @@
+Type: Simple Consensus
+
+Neurons: 50
+
+Consensus: Yes
+Weighted: No
+The median is applied to all layers.
+
+Train: 250 steps
+Test: 250 steps

@@ -26,5 +26,334 @@
             149.12,
             -36.64
         ]
+    },
+    "BODWF1": {
+        "name": "Bodangora Wind Farm",
+        "coordinates": [
+            149.041,
+            -32.407
+        ]
+    },
+    "CAPTL_WF": {
+        "name": "Capital Wind Farm",
+        "coordinates": [
+            149.53,
+            -35.15
+        ]
+    },
+    "CATHROCK": {
+        "name": "Cathedral Rocks",
+        "coordinates": [
+            135.54,
+            -34.76
+        ]
+    },
+    "CHALLHWF": {
+        "name": "Challicum Hills Wind Farm",
+        "coordinates": [
+            143.09,
+            -37.38
+        ]
+    },
+    "CLEMGPWF": {
+        "name": "Clements Gap Wind Farm",
+        "coordinates": [
+            138.1,
+            -33.5
+        ]
+    },
+    "CNUNDAWF": {
+        "name": "Canunda Wind Farm",
+        "coordinates": [
+            140.4,
+            -37.75
+        ]
+    },
+    "CROOKWF2": {
+        "name": "Crookwell 2 Wind Farm",
+        "coordinates": [
+            149.542,
+            -34.517
+        ]
+    },
+    "CROWLWF1": {
+        "name": "Crowlands Wind Farm",
+        "coordinates": [
+            143.098,
+            -36.976
+        ]
+    },
+    "CULLRGWF": {
+        "name": "Cullerin Range Wind Farm",
+        "coordinates": [
+            149.4,
+            -34.81
+        ]
+    },
+    "GULLRWF1": {
+        "name": "Gullen Range Wind Farm",
+        "coordinates": [
+            149.46,
+            -34.61
+        ]
+    },
+    "GUNNING1": {
+        "name": "Gunning Wind Farm",
+        "coordinates": [
+            149.38,
+            -34.68
+        ]
+    },
+    "HALLWF1": {
+        "name": "Hallett 1 Wind Farm",
+        "coordinates": [
+            138.73,
+            -33.31
+        ]
+    },
+    "HALLWF2": {
+        "name": "Hallett 2 Wind Farm",
+        "coordinates": [
+            138.86,
+            -33.55
+        ]
+    },
+    "HDWF1": {
+        "name": "Hornsdale Wind Farm",
+        "coordinates": [
+            138.5557,
+            -33.0347
+        ]
+    },
+    "HDWF2": {
+        "name": "Hornsdale Wind Farm 2",
+        "coordinates": [
+            138.453,
+            -33.042
+        ]
+    },
+    "HDWF3": {
+        "name": "Hornsdale Wind Farm 3",
+        "coordinates": [
+            138.522,
+            -33.086
+        ]
+    },
+    "KIATAWF1": {
+        "name": "Kiata Wind Farm",
+        "coordinates": [
+            141.762,
+            -36.401
+        ]
+    },
+    "LKBONNY1": {
+        "name": "Lake Bonney Wind Farm Stage 1",
+        "coordinates": [
+            140.4,
+            -37.76
+        ]
+    },
+    "LKBONNY2": {
+        "name": "Lake Bonney Stage 2 Windfarm",
+        "coordinates": [
+            140.4,
+            -37.76
+        ]
+    },
+    "LKBONNY3": {
+        "name": "Lake Bonney Stage 3 Wind Farm",
+        "coordinates": [
+            140.4,
+            -37.76
+        ]
+    },
+    "MACARTH1": {
+        "name": "Macarthur Wind Farm",
+        "coordinates": [
+            142.03,
+            -38.04
+        ]
+    },
+    "MERCER01": {
+        "name": "Mt Mercer Wind Farm",
+        "coordinates": [
+            143.87,
+            -37.83
+        ]
+    },
+    "MEWF1": {
+        "name": "Mount Emerald Wind Farm",
+        "coordinates": [
+            145.37,
+            -17.18
+        ]
+    },
+    "MLWF1": {
+        "name": "Mortons Lane Wind Farm",
+        "coordinates": [
+            142.47,
+            -37.82
+        ]
+    },
+    "MTGELWF1": {
+        "name": "Mt Gellibrand Wind Farm",
+        "coordinates": [
+            143.799,
+            -38.258
+        ]
+    },
+    "MTMILLAR": {
+        "name": "Mt Millar Wind Farm",
+        "coordinates": [
+            136.74,
+            -33.7
+        ]
+    },
+    "MUSSELR1": {
+        "name": "Musselroe Wind Farm",
+        "coordinates": [
+            147.95,
+            -40.75
+        ]
+    },
+    "NBHWF1": {
+        "name": "North Brown Hill Wind Farm",
+        "coordinates": [
+            138.72,
+            -33.24
+        ]
+    },
+    "OAKLAND1": {
+        "name": "Oaklands Hill Wind Farm",
+        "coordinates": [
+            142.55,
+            -37.68
+        ]
+    },
+    "PORTWF": {
+        "name": "Portland Wind Farm",
+        "coordinates": [
+            141.59,
+            -38.35
+        ]
+    },
+    "SALTCRK1": {
+        "name": "Salt Creek Wind Farm",
+        "coordinates": [
+            142.789,
+            -37.908
+        ]
+    },
+    "SAPHWF1": {
+        "name": "Sapphire Wind Farm",
+        "coordinates": [
+            151.468,
+            -29.739
+        ]
+    },
+    "SNOWNTH1": {
+        "name": "Snowtown Wind Farm Stage 2 North",
+        "coordinates": [
+            138.1457,
+            -33.7219
+        ]
+    },
+    "SNOWSTH1": {
+        "name": "Snowtown South Wind Farm",
+        "coordinates": [
+            138.1203,
+            -33.8669
+        ]
+    },
+    "SNOWTWN1": {
+        "name": "Snowtown Wind Farm Units 1 And 47",
+        "coordinates": [
+            138.13,
+            -33.69
+        ]
+    },
+    "STARHLWF": {
+        "name": "Starfish Hill Wind Farm",
+        "coordinates": [
+            138.16,
+            -35.57
+        ]
+    },
+    "STWF1": {
+        "name": "Silverton Wind Farm",
+        "coordinates": [
+            141.246,
+            -31.798
+        ]
+    },
+    "TARALGA1": {
+        "name": "Taralga Wind Farm",
+        "coordinates": [
+            149.87,
+            -34.41
+        ]
+    },
+    "WATERLWF": {
+        "name": "Waterloo Wind Farm",
+        "coordinates": [
+            138.92,
+            -33.99
+        ]
+    },
+    "WAUBRAWF": {
+        "name": "Waubra Wind Farm",
+        "coordinates": [
+            143.64,
+            -37.36
+        ]
+    },
+    "WGWF1": {
+        "name": "Willogoleche Wind Farm",
+        "coordinates": [
+            138.848,
+            -33.393
+        ]
+    },
+    "WOODLWN1": {
+        "name": "Woodlawn Wind Farm",
+        "coordinates": [
+            149.57,
+            -35.06
+        ]
+    },
+    "WOOLNTH1": {
+        "name": "Woolnorth Studland Bay / Bluff Point Wind Farm",
+        "coordinates": [
+            144.7,
+            -40.68
+        ]
+    },
+    "WPWF": {
+        "name": "Wattle Point Wind Farm",
+        "coordinates": [
+            137.73,
+            -35.1
+        ]
+    },
+    "WRWF1": {
+        "name": "White Rock Wind Farm",
+        "coordinates": [
+            151.548,
+            -29.83
+        ]
+    },
+    "YAMBUKWF": {
+        "name": "Yambuk Wind Farm",
+        "coordinates": [
+            142.04,
+            -38.33
+        ]
+    },
+    "YSWF1": {
+        "name": "Yaloak South Wind Farm",
+        "coordinates": [
+            144.241,
+            -37.716
+        ]
     }
 }

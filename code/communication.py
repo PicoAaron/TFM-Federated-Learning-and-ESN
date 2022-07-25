@@ -51,7 +51,7 @@ class Communication(CyclicBehaviour):
 
             if format(msg.body) == 'request':
                 #w = [ a.tolist() for a in self.agent.x ]
-                message = [self.agent.model.get_weights(), self.agent.loss, self.agent.epoch, self.agent.round, self.agent.model_cons_w.get_weights(), self.agent.loss_cons_w]
+                message = [self.agent.model.get_weights(), self.agent.loss, self.agent.epoch, self.agent.round] #, self.agent.model_cons_w.get_weights(), self.agent.loss_cons_w]
                 pickled = codecs.encode(pickle.dumps(message), "base64").decode()
                 await self.message_to(neighbor, pickled)
                 
@@ -63,12 +63,12 @@ class Communication(CyclicBehaviour):
                 epoch = message[2]
                 round = message[3]
 
-                weights_cons_w = message[4]
-                loss_cons_w = message[5]
+                #weights_cons_w = message[4]
+                #loss_cons_w = message[5]
 
                 if (epoch > self.agent.epoch) or (epoch == self.agent.epoch and round >= self.agent.round):
                     self.agent.neighbors.update( { neighbor: {'weights': weights, 'loss': loss} } )
-                    self.agent.neighbors_cons_w.update( { neighbor: {'weights': weights_cons_w, 'loss': loss_cons_w} } )
+                    #self.agent.neighbors_cons_w.update( { neighbor: {'weights': weights_cons_w, 'loss': loss_cons_w} } )
                     #print(f'{self.agent.jid}: {neighbor}, epoch: {epoch}, round: {round} -> ACCEPTED')
                 #else:
                     #print(f'{self.agent.jid}: {neighbor}, epoch: {epoch}, round: {round} -> NOT ACCEPTED')

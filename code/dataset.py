@@ -36,27 +36,6 @@ def sequence(df, n):
 
 	return x, y
 
-'''
-def sequence2(df, n):
-	seq_aux = df.iloc[:, n].tolist()
-
-	seq = []
-	for elem in seq_aux:
-		if np.isnan(elem):
-				seq.append(0.0)
-		else:
-			seq.append(elem)
-	
-	x, y = split_sequence(seq, n_steps)
-	
-	x = np.array(x)
-	y = np.array(y)
-
-	x = x.reshape((x.shape[0], x.shape[1], n_features))
-
-	return x, y
-'''
-
 
 def sequence_many(df, n1, n2):
 	x = []
@@ -81,8 +60,6 @@ def sequence_many(df, n1, n2):
 	x = x.reshape((x.shape[0], x.shape[1], n_features))
 
 	return x, y
-
-
 
 
 def distance(c1, c2):
@@ -157,8 +134,6 @@ def adjacency_radius(data, radius):
 	return np.array(ad_matrix), neighbors_list, pos
 
 
-
-
 def wind_data(df, name, num_train):
 
 	seq_aux = df[name]
@@ -178,9 +153,15 @@ def wind_data(df, name, num_train):
 	#print(seq_x)
 	#print(zero)
 	for i in range(len(seq_x)):
+		#try:
 		if not np.array_equal(seq_x[i], zero):
 			x.append(seq_x[i])
 			y.append(seq_y[i])
+		'''except:
+			print()
+			print(seq_x[i])
+			print(zero)
+			print()'''
 		#else:
 			#print('EO')
 

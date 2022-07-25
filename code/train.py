@@ -86,7 +86,7 @@ class Train(CyclicBehaviour):
                     test_acc_no_cons, test_loss_no_cons = history_no_cons.history['val_accuracy'][-1], history_no_cons.history['val_loss'][-1]
                     #---------------------------------------------------------------------------------------
 
-
+                    '''
                     # Model with  CONSENSUS WEIGHTED ------------------------------------------------------------
                     history_cons_w = self.agent.model_cons_w.fit(   self.agent.x,
                                             self.agent.y,
@@ -107,25 +107,26 @@ class Train(CyclicBehaviour):
 
                     test_acc_cons_w, test_loss_cons_w = history_cons_w.history['val_accuracy'][-1], history_cons_w.history['val_loss'][-1]
                     #---------------------------------------------------------------------------------------
-
+                    '''
 
 
                     #self.agent.saved_history.update({'val_loss': self.agent.saved_history['val_loss'].append(history.history['val_loss'][-1])})
 
                     # log de pesos
                     write_weights(f'{self.agent.jid}_weights', 'a', f'Entrenamiento {self.agent.epoch}', self.agent.model.get_weights())
-                    write_weights(f'{self.agent.jid}_weights', 'a', f'Entrenamiento {self.agent.epoch} WITH CONSENSUS WEIGHTED', self.agent.model_no_cons.get_weights())
+                    #write_weights(f'{self.agent.jid}_weights', 'a', f'Entrenamiento {self.agent.epoch} WITH CONSENSUS WEIGHTED', self.agent.model_no_cons.get_weights())
                     write_weights(f'{self.agent.jid}_weights', 'a', f'Entrenamiento {self.agent.epoch} WITH NO CONSENSUS', self.agent.model_no_cons.get_weights())
 
 
                     write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'Entrenamiento {self.agent.epoch}: {test_loss}')
-                    write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'Entrenamiento {self.agent.epoch} WITH CONSENSUS WEIGHTED: {test_loss_cons_w}')
+                    #write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'Entrenamiento {self.agent.epoch} WITH CONSENSUS WEIGHTED: {test_loss_cons_w}')
                     write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'Entrenamiento {self.agent.epoch} WITH NO CONSENSUS: {test_loss_no_cons}\n')
+                    
                     #write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'LOCAL  -> LOSS: {test_loss}')
                     #write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'GLOBAL -> LOSS: {global_test_loss}\n')
 
                     self.agent.loss = test_loss
-                    self.agent.loss_cons_w  = test_loss_cons_w
+                    #self.agent.loss_cons_w  = test_loss_cons_w
                     self.agent.training_activated = False
                     self.agent.consensus_activated = True
                 else:
