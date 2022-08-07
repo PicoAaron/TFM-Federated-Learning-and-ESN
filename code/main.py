@@ -29,7 +29,7 @@ import dataset
 from dataset import adjacency, adjacency_radius, wind_data, sequence_many
 
 import write
-from write import write, write_evaluation, write_weights
+from write import write_data, write_evaluation, write_weights
 
 import pandas as pd
 
@@ -70,7 +70,7 @@ class NodeAgent(Agent):
         self.finished = False
         self.loss = -1
         self.loss_cons_w = -1
-        self.saved_history={'loss': [], 'val_loss': []}
+        self.saved_history={'loss': [], 'val_loss': [], 'loss_consensus_local': [], 'loss_consensus_global': []}
         self.saved_history_cons_w={'loss': [], 'val_loss': []}
         self.saved_history_no_cons={'loss': [], 'val_loss': []}
         Agent.__init__(self, jid, password)
@@ -107,7 +107,7 @@ class NodeAgent(Agent):
 
 def prepare_network_antig(n):
 
-    data = pd.read_csv("../data/aemo_2018.csv", sep=',', header=0)
+    data = pd.read_csv("data/aemo_2018.csv", sep=',', header=0)
 
     test_x, test_y = sequence_many(data, 15, 30)
 
@@ -136,17 +136,17 @@ def prepare_network_antig(n):
     return agents
 
 
-def prepare_network(n):
+def prepare_network():
     
-    data = pd.read_csv("../data/aemo_2018.csv", sep=',', header=0)
+    data = pd.read_csv("data/aemo_2018.csv", sep=',', header=0)
 
-    with open('../data/data_network.json') as file:
+    with open('data/data_network.json') as file:
         data_network = json.load(file)
 
     agents = []
 
-    A, neighbors_list, pos = adjacency_radius(data_network, 4)
-    '''A = np.array([[0, 1, 1, 0],
+    A, neighbors_list = adjacency(data_network, 3)
+    A = np.array([[0, 1, 1, 0],
                   [1, 0, 1, 0],
                   [1, 1, 0, 1],
                   [0, 0, 1, 0]])
@@ -156,7 +156,7 @@ def prepare_network(n):
                         'BALDHWF1': ['arwf1@localhost', 'bluff1@localhost'],
                         'BLUFF1': ['arwf1@localhost', 'baldhwf1@localhost', 'bocorwf1@localhost'],
                         'BOCORWF1': ['bluff1@localhost']
-    }'''
+    }
 
     #print(A)
 
@@ -171,14 +171,12 @@ def prepare_network(n):
         
         x_train, y_train, x_test, y_test  = wind_data( data, node, 80 )
 
-        
-
         #print(f'x_train: {len(x_train)}')
         #print(f'x_test: {len(x_test)}')
 
         #print(f'{node.lower()}: {neighbors}')
         
-        senderagent = NodeAgent(f'{node.lower()}@localhost', "sender_password", n, 5, 15, neighbors, A, x_train, y_train, x_test, y_test, global_test_x, global_test_y)
+        senderagent = NodeAgent(f'{node.lower()}@localhost', "sender_password", len(A), 5, 5, neighbors, A, x_train, y_train, x_test, y_test, global_test_x, global_test_y)
         agents.append(senderagent)
         senderagent.start()
         #senderagent.web.start(hostname="127.0.0.1", port=f'1000{i}')
@@ -186,10 +184,43 @@ def prepare_network(n):
     return agents
 
 
+def prepare_network_saved():
+    
+    data = pd.read_csv("data/aemo_2018.csv", sep=',', header=0)
+
+    with open('data/data_network.json') as file:
+        data_network = json.load(file)
+
+    with open('data/A.json') as file:
+        A = json.load(file)
+
+    with open('data/neighbors.json') as file:
+        neighbors_list = json.load(file)
+
+
+    agents = []
+
+    global_test_x, global_test_y = sequence_many(data, 5, 30)
+
+    for node in data_network:
+        #neighbors = neighbors_dict[node]
+        neighbors = []
+        for neighbor in neighbors_list[node]:
+            neighbors.append( f'{neighbor.lower()}@localhost' )
+        #print(neighbors)
+        
+        x_train, y_train, x_test, y_test  = wind_data( data, node, 80 )
+        
+        senderagent = NodeAgent(f'{node.lower()}@localhost', "sender_password", len(A), 5, 5, neighbors, A, x_train, y_train, x_test, y_test, global_test_x, global_test_y)
+        agents.append(senderagent)
+        senderagent.start()
+
+    return agents
+
 
 if __name__ == "__main__":
 
-    agents = prepare_network(4)
+    agents = prepare_network()
     print()
     print('Nodes started')
     print()
@@ -200,6 +231,12 @@ if __name__ == "__main__":
             agent_status = [agent.finished for agent in agents]
             if not False in agent_status:
                 print('All agents finished')
+
+                for agent in agents:
+                    data = {'Federated': agent.saved_history, 'No Federated (Local)': agent.saved_history_no_cons}
+                    write_data(agent.jid, data)
+
+
                 for agent in agents:
                     plt.plot(agent.saved_history['loss'])
                     plt.plot(agent.saved_history['val_loss'])
@@ -207,7 +244,7 @@ if __name__ == "__main__":
                     plt.ylabel('loss')
                     plt.xlabel('epoch')
                     plt.legend(['train', 'test'], loc='upper left')
-                    plt.savefig(f'../logs/images/all')
+                    plt.savefig(f'logs/images/all')
                 
                 for agent in agents:
                     plt.figure()
@@ -219,7 +256,7 @@ if __name__ == "__main__":
                     plt.xlabel('epoch')
                     #plt.legend(['Consensus', 'Consensus Weighted', 'No Consensus'], loc='upper left')
                     plt.legend(['Consensus', 'No Consensus'], loc='upper left')
-                    plt.savefig(f'../logs/images/{agent.jid}')
+                    plt.savefig(f'logs/images/{agent.jid}')
 
                 break
 

@@ -98,7 +98,7 @@ class Consensus(CyclicBehaviour):
                 best_loss = neighbor['loss']
                 best = neighbor['weights']
 
-        layers_nc = [0]
+        layers_nc = [0, 1]
         for layer in range(len(w)):
             if layer not in layers_nc:
                 addition = 0
@@ -180,7 +180,7 @@ class Consensus(CyclicBehaviour):
                 if self.agent.round < self.agent.rounds_consensus:
                     self.agent.round +=1
                     self.do_consensus()
-                    self.do_consensus_weighted()
+                    #self.do_consensus_weighted()
                     self.agent.weights_shared = False
                     self.agent.all_weights_prepared = False
                     for neighbor in self.agent.neighbors:
@@ -191,16 +191,25 @@ class Consensus(CyclicBehaviour):
                     self.agent.training_activated = True
                     self.agent.round = 0
 
+                
                     # log de pesos
                     write_weights(f'{self.agent.jid}_weights', 'a', f'Consenso {self.agent.epoch}', self.agent.model.get_weights())
 
                     # log de evaluación
-                    #test_acc, test_loss = test(self.agent.model, self.agent.test_x, self.agent.test_y)
-                    #gloabal_test_acc, global_test_loss = test(self.agent.model, self.agent.global_test_x, self.agent.global_test_y)
+                    test_acc, test_loss = test(self.agent.model, self.agent.test_x, self.agent.test_y)
+                    gloabal_test_acc, global_test_loss = test(self.agent.model, self.agent.global_test_x, self.agent.global_test_y)
 
-                    #write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'Consenso {self.agent.epoch}:')
-                    #write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'LOCAL  -> LOSS: {test_loss}')
-                    #write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'GLOBAL -> LOSS: {global_test_loss}\n\n----------------\n')
+                    loss = self.agent.saved_history['loss_consensus_local']
+                    loss.append(test_loss)
+                    self.agent.saved_history.update({'loss_consensus_local': loss})
+
+                    loss_global = self.agent.saved_history['loss_consensus_global']
+                    loss_global.append(global_test_loss)
+                    self.agent.saved_history.update({'loss_consensus_global': loss_global})
+
+                    write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'Consenso {self.agent.epoch}:')
+                    write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'LOCAL  -> LOSS: {test_loss}')
+                    write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'GLOBAL -> LOSS: {global_test_loss}\n\n----------------\n')
                     
                     #print(f'Consenso {self.agent.epoch}: {self.agent.jid}: {str(self.agent.model.get_weights())}')
                     print(f'Consenso {self.agent.epoch}: {self.agent.jid}')

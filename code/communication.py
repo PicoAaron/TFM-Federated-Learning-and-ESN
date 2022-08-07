@@ -13,6 +13,8 @@ import pickle
 
 import codecs
 
+import threading
+
 class Communication(CyclicBehaviour):
 
     def __init__(self, outer):
@@ -33,14 +35,15 @@ class Communication(CyclicBehaviour):
         #print(f'{self.agent.jid}: {self.agent.neighbors}')
         for neighbor in self.agent.neighbors:
             
-            if self.agent.neighbors.get(neighbor) is None or self.agent.neighbors_cons_w.get(neighbor) is None:
+            #if self.agent.neighbors.get(neighbor) is None or self.agent.neighbors_cons_w.get(neighbor) is None:
+            if self.agent.neighbors.get(neighbor) is None:
                 prepared = False
                 await self.message_to(neighbor, 'request')
 
 
         self.agent.all_weights_prepared = prepared
 
-
+    
     async def run(self):
         msg = await self.receive(timeout=1)
 

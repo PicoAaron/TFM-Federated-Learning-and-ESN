@@ -1,6 +1,15 @@
 Inicio
 ----------------
 
-Entrenamiento 0: 3.989673137664795
-Entrenamiento 0 WITH NO CONSENSUS: 3.976715564727783
+Entrenamiento 0: 3.1276962757110596
+Entrenamiento 0 WITH NO CONSENSUS: 3.1341633796691895
+
+Consenso 0:
+LOCAL  -> LOSS: 12.418453216552734
+GLOBAL -> LOSS: 34.12646484375
+
+----------------
+
+Entrenamiento 1: 2.284648895263672
+Entrenamiento 1 WITH NO CONSENSUS: 2.380709409713745
 
