@@ -15,7 +15,7 @@ import write
 from write import write_evaluation, write_weights
 
 import esn
-from esn import test
+from esn import test, structure, structure_best
 
 class Consensus(CyclicBehaviour):
 
@@ -28,32 +28,7 @@ class Consensus(CyclicBehaviour):
     # Consenso
     # ----------------------------------------------------------------
 
-    def do_consensus_antig(self):
-        #print(self.agent.neighbors)
-        w = self.agent.model.get_weights() # Weights of Node
-        values = []
-        for neighbor in self.agent.neighbors:
-            n_weights = self.agent.neighbors.get(neighbor)['weights']
-            '''
-            if n_weights is not None:
-                w_aux = [ np.array(row) for row in n_weights ]
-                values.append(np.array(w_aux))'''
-            values.append(n_weights)
-
-        values = np.array(values)
-        #print(f'values: {values}')
-
-        addition = 0
-        for v in values:
-            addition += v - w
-
-        #print(f'addition: {addition}')
-        w = w + (self.eps * addition)
-        
-        self.agent.model.set_weights(w)
-
-
-    def do_consensus(self):
+    def do_consensus(self, process_structure=False, one_or_zero_first=False, one_or_zero_end=False):
         #print(self.agent.neighbors)
         w = self.agent.model.get_weights() # Weights of Node
 
@@ -65,9 +40,8 @@ class Consensus(CyclicBehaviour):
         #w_neighbors = np.array(w_neighbors)
         #print(f'values: {values}')
 
-
         layers_nc = []
-        for layer in range(len(w)):
+        for layer in range(0, len(w)):
             if layer not in layers_nc:
                 addition = 0
                 for v in w_neighbors:
@@ -75,6 +49,109 @@ class Consensus(CyclicBehaviour):
 
                 #print(f'addition: {addition}')
                 w[layer] = w[layer] + (self.eps * addition)
+        
+        self.agent.model.set_weights(w)
+
+
+    def do_consensus_repeated_links(self, process_structure=False, one_or_zero_first=False, one_or_zero_end=False):
+        #print(self.agent.neighbors)
+        w = self.agent.model.get_weights() # Weights of Node
+
+        w_neighbors = []
+        for neighbor in self.agent.neighbors:
+            n_weights = self.agent.neighbors.get(neighbor)
+            w_neighbors.append(n_weights)
+
+        #w_neighbors = np.array(w_neighbors)
+        #print(f'values: {values}')
+
+        #if process_structure:
+        # For the layer 0 (structure)
+        w_all = w_neighbors.copy()
+        structure_list = [x['weights'][0] for x in w_all]
+        structure_list.append(w[0])
+        #print(structure_list[0])
+        
+        new_structure = structure(structure_list, one_or_zero_first, one_or_zero_end)
+        w[0] = new_structure
+
+        layers_nc = []
+        for layer in range(1, len(w)):
+            if layer not in layers_nc:
+                addition = 0
+                for v in w_neighbors:
+                    addition += (v['weights'][layer] - w[layer])
+
+                #print(f'addition: {addition}')
+                w[layer] = w[layer] + (self.eps * addition)
+        
+        self.agent.model.set_weights(w)
+
+
+    def do_consensus_best_links(self, process_structure=False, one_or_zero_first=False, one_or_zero_end=False):
+        #print(self.agent.neighbors)
+        w = self.agent.model.get_weights() # Weights of Node
+
+        w_neighbors = []
+        for neighbor in self.agent.neighbors:
+            n_weights = self.agent.neighbors.get(neighbor)
+            w_neighbors.append(n_weights)
+
+        #w_neighbors = np.array(w_neighbors)
+        #print(f'values: {values}')
+
+        #if process_structure:
+        # For the layer 0 (structure)
+        w_all = w_neighbors.copy()
+        structure_list = [x['weights'][0] for x in w_all]
+        structure_list.append(w[0])
+        #print(structure_list[0])
+
+        performance_list = [n['loss'] for n in w_neighbors]
+
+        new_structure = structure_best(structure_list, performance_list,one_or_zero_first, one_or_zero_end)
+        w[0] = new_structure
+
+        #print('------------------')
+        #print(f'JID: {self.agent.jid}')
+        #print(new_structure)
+        #print('------------------')
+
+        layers_nc = []
+        for layer in range(1, len(w)):
+            if layer not in layers_nc:
+                addition = 0
+                for v in w_neighbors:
+                    addition += (v['weights'][layer] - w[layer])
+
+                #print(f'addition: {addition}')
+                w[layer] = w[layer] + (self.eps * addition)
+        
+        self.agent.model.set_weights(w)
+
+
+    '''
+    def do_consensus_antig(self):
+        #print(self.agent.neighbors)
+        w = self.agent.model.get_weights() # Weights of Node
+        values = []
+        for neighbor in self.agent.neighbors:
+            n_weights = self.agent.neighbors.get(neighbor)['weights']
+            
+            #if n_weights is not None:
+            #    w_aux = [ np.array(row) for row in n_weights ]
+            #    values.append(np.array(w_aux))
+            values.append(n_weights)
+
+        values = np.array(values)
+        #print(f'values: {values}')
+
+        addition = 0
+        for v in values:
+            addition += v - w
+
+        #print(f'addition: {addition}')
+        w = w + (self.eps * addition)
         
         self.agent.model.set_weights(w)
 
@@ -150,6 +227,9 @@ class Consensus(CyclicBehaviour):
         self.agent.model_cons_w.set_weights(w)
 
 
+
+    '''
+
     # ---------------------------------------------------------------
 
     # Valor de epsilon
@@ -179,7 +259,14 @@ class Consensus(CyclicBehaviour):
             if self.agent.all_weights_prepared:
                 if self.agent.round < self.agent.rounds_consensus:
                     self.agent.round +=1
-                    self.do_consensus()
+
+                    if self.agent.round == 1:
+                        self.do_consensus(process_structure=True, one_or_zero_first=True)
+                    elif self.agent.round == self.agent.rounds_consensus:
+                        self.do_consensus(process_structure=True, one_or_zero_end=True)
+                    else:
+                        self.do_consensus()
+
                     #self.do_consensus_weighted()
                     self.agent.weights_shared = False
                     self.agent.all_weights_prepared = False
@@ -213,3 +300,4 @@ class Consensus(CyclicBehaviour):
                     
                     #print(f'Consenso {self.agent.epoch}: {self.agent.jid}: {str(self.agent.model.get_weights())}')
                     print(f'Consenso {self.agent.epoch}: {self.agent.jid}')
+            

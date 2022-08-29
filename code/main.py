@@ -31,12 +31,16 @@ from dataset import adjacency, adjacency_radius, wind_data, sequence_many
 import write
 from write import write_data, write_evaluation, write_weights
 
+import process_results
+from process_results import process
+
 import pandas as pd
 
 import warnings
 warnings.filterwarnings('ignore')
 
 import json
+import sys
 
 
 class NodeAgent(Agent):
@@ -140,7 +144,7 @@ def prepare_network():
     
     data = pd.read_csv("data/aemo_2018.csv", sep=',', header=0)
 
-    with open('data/data_network.json') as file:
+    with open('data/data_network_small.json') as file:
         data_network = json.load(file)
 
     agents = []
@@ -163,11 +167,11 @@ def prepare_network():
     global_test_x, global_test_y = sequence_many(data, 5, 30)
 
     for node in data_network:
-        #neighbors = neighbors_dict[node]
-        neighbors = []
-        for neighbor in neighbors_list[node]:
-            neighbors.append( f'{neighbor.lower()}@localhost' )
-        #print(neighbors)
+        neighbors = neighbors_dict[node]
+        #neighbors = []
+        #for neighbor in neighbors_list[node]:
+        #    neighbors.append( f'{neighbor.lower()}@localhost' )
+        print(neighbors)
         
         x_train, y_train, x_test, y_test  = wind_data( data, node, 80 )
 
@@ -188,13 +192,13 @@ def prepare_network_saved():
     
     data = pd.read_csv("data/aemo_2018.csv", sep=',', header=0)
 
-    with open('data/data_network.json') as file:
-        data_network = json.load(file)
+    #with open('data/data_network.json') as file:
+        #data_network = json.load(file)
 
-    with open('data/A.json') as file:
+    with open('data/A_22.json') as file:
         A = json.load(file)
 
-    with open('data/neighbors.json') as file:
+    with open('data/neighbors_22.json') as file:
         neighbors_list = json.load(file)
 
 
@@ -202,7 +206,7 @@ def prepare_network_saved():
 
     global_test_x, global_test_y = sequence_many(data, 5, 30)
 
-    for node in data_network:
+    for node in neighbors_list:
         #neighbors = neighbors_dict[node]
         neighbors = []
         for neighbor in neighbors_list[node]:
@@ -220,50 +224,57 @@ def prepare_network_saved():
 
 if __name__ == "__main__":
 
-    agents = prepare_network()
-    print()
-    print('Nodes started')
-    print()
+    #np.set_printoptions(threshold=sys.maxsize)
 
-    while True:
-        try:
-            time.sleep(1)
-            agent_status = [agent.finished for agent in agents]
-            if not False in agent_status:
-                print('All agents finished')
+    for i in range(1,5+1):
+        agents = prepare_network()
+        print()
+        print('Nodes started')
+        print()
 
+        while True:
+            try:
+                time.sleep(1)
+                agent_status = [agent.finished for agent in agents]
+                #print(agent_status)
+                if not False in agent_status:
+                    print('All agents finished')
+
+                    for agent in agents:
+                        data = {'Federated': agent.saved_history, 'No Federated (Local)': agent.saved_history_no_cons}
+                        write_data(agent.jid, i, data)
+
+                    process(i)
+
+                    for agent in agents:
+                        #plt.plot(agent.saved_history['loss'])
+                        plt.plot(agent.saved_history['val_loss'])
+                        plt.title('model loss')
+                        plt.ylabel('loss')
+                        plt.xlabel('epoch')
+                        #plt.legend(['train', 'test'], loc='upper left')
+                        plt.savefig(f'logs/images/all')
+                    
+                    '''
+                    for agent in agents:
+                        plt.figure()
+                        plt.plot(agent.saved_history['val_loss'])
+                        #plt.plot(agent.saved_history_cons_w['val_loss'])
+                        plt.plot(agent.saved_history_no_cons['val_loss'])
+                        plt.title('model val_loss')
+                        plt.ylabel('loss')
+                        plt.xlabel('epoch')
+                        #plt.legend(['Consensus', 'Consensus Weighted', 'No Consensus'], loc='upper left')
+                        plt.legend(['Consensus', 'No Consensus'], loc='upper left')
+                        plt.savefig(f'logs/images/{agent.jid}')
+                    '''
+
+                    break
+
+
+            except KeyboardInterrupt:
                 for agent in agents:
-                    data = {'Federated': agent.saved_history, 'No Federated (Local)': agent.saved_history_no_cons}
-                    write_data(agent.jid, data)
-
-
-                for agent in agents:
-                    plt.plot(agent.saved_history['loss'])
-                    plt.plot(agent.saved_history['val_loss'])
-                    plt.title('model loss')
-                    plt.ylabel('loss')
-                    plt.xlabel('epoch')
-                    plt.legend(['train', 'test'], loc='upper left')
-                    plt.savefig(f'logs/images/all')
-                
-                for agent in agents:
-                    plt.figure()
-                    plt.plot(agent.saved_history['val_loss'])
-                    #plt.plot(agent.saved_history_cons_w['val_loss'])
-                    plt.plot(agent.saved_history_no_cons['val_loss'])
-                    plt.title('model val_loss')
-                    plt.ylabel('loss')
-                    plt.xlabel('epoch')
-                    #plt.legend(['Consensus', 'Consensus Weighted', 'No Consensus'], loc='upper left')
-                    plt.legend(['Consensus', 'No Consensus'], loc='upper left')
-                    plt.savefig(f'logs/images/{agent.jid}')
-
+                    agent.stop()
                 break
-
-
-        except KeyboardInterrupt:
-            for agent in agents:
-                agent.stop()
-            break
 
     print("Agents finished")

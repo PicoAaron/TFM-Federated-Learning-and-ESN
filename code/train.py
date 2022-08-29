@@ -49,7 +49,7 @@ class Train(CyclicBehaviour):
                                             epochs=1,
                                             verbose=1)
 
-                    time.sleep(0)
+                    #time.sleep(0)
 
                     # log de evaluación
                     #test_acc, test_loss = history.history['val_accuracy'][-1], history.history['val_loss'][-1]
@@ -77,7 +77,7 @@ class Train(CyclicBehaviour):
                                             epochs=1,
                                             verbose=1)
 
-                    time.sleep(0)
+                    #time.sleep(0)
 
                     #test_acc_no_cons, test_loss_no_cons = history_no_cons.history['val_accuracy'][-1], history_no_cons.history['val_loss'][-1]
                     test_acc_no_cons, test_loss_no_cons = test(self.agent.model_no_cons, self.agent.test_x, self.agent.test_y)
@@ -126,7 +126,7 @@ class Train(CyclicBehaviour):
                     #write_weights(f'{self.agent.jid}_weights', 'a', f'Entrenamiento {self.agent.epoch} WITH CONSENSUS WEIGHTED', self.agent.model_no_cons.get_weights())
                     write_weights(f'{self.agent.jid}_weights', 'a', f'Entrenamiento {self.agent.epoch} WITH NO CONSENSUS', self.agent.model_no_cons.get_weights())
 
-                    time.sleep(0)
+                    #time.sleep(0)
 
                     write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'Entrenamiento {self.agent.epoch}: {test_loss}')
                     #write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'Entrenamiento {self.agent.epoch} WITH CONSENSUS WEIGHTED: {test_loss_cons_w}')
@@ -135,10 +135,11 @@ class Train(CyclicBehaviour):
                     #write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'LOCAL  -> LOSS: {test_loss}')
                     #write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'GLOBAL -> LOSS: {global_test_loss}\n')
 
-                    time.sleep(0)
+                    #time.sleep(0)
 
                     self.agent.loss = test_loss
                     #self.agent.loss_cons_w  = test_loss_cons_w
+                    
                     self.agent.training_activated = False
                     self.agent.consensus_activated = True
                 else:

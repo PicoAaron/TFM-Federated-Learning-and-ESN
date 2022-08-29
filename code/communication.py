@@ -25,7 +25,8 @@ class Communication(CyclicBehaviour):
     async def message_to(self, id, message):
         msg = Message(to=id)                        # Instantiate the message
         msg.set_metadata("performative", "inform")  # Set the "inform" FIPA performative
-        msg.body = message                          # Set the message content
+        msg.body = message                          # Set the message content´
+        #print(f'{self.agent.jid}: TO {id}')
         await self.send(msg)
 
 
@@ -76,5 +77,6 @@ class Communication(CyclicBehaviour):
                 #else:
                     #print(f'{self.agent.jid}: {neighbor}, epoch: {epoch}, round: {round} -> NOT ACCEPTED')
         
-        elif self.agent.all_weights_prepared == False:
+        elif self.agent.consensus_activated == True and self.agent.all_weights_prepared == False:
             await self.receive_weights()
+        

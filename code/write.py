@@ -21,6 +21,6 @@ def write_data(name, mode, text):
     with np.printoptions(threshold=np.inf):
       f.write(f'{text}\n')'''
 
-def write_data(name, data):
-  with open(f'logs/data/{name}.json', 'w') as file:
+def write_data(name, num_experiment, data):
+  with open(f'results/experiment_results/experiment_{num_experiment}/{name}.json', 'w') as file:
     json.dump(data, file, indent=4)
