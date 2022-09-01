@@ -66,6 +66,8 @@ class Train(CyclicBehaviour):
                     val_loss.append(test_loss)
                     self.agent.saved_history.update({'val_loss': val_loss})
 
+                    global_test_acc, global_test_loss = test(self.agent.model, self.agent.global_test_x, self.agent.global_test_y)
+
 
                     # Model with  NO CONSENSUS ------------------------------------------------------------
                     history_no_cons = self.agent.model_no_cons.fit(   self.agent.x,
@@ -91,6 +93,7 @@ class Train(CyclicBehaviour):
                     val_loss_no_cons.append(test_loss_no_cons)
                     self.agent.saved_history_no_cons.update({'val_loss': val_loss_no_cons})
 
+                    
 
                     
                     #---------------------------------------------------------------------------------------
@@ -129,6 +132,8 @@ class Train(CyclicBehaviour):
                     #time.sleep(0)
 
                     write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'Entrenamiento {self.agent.epoch}: {test_loss}')
+                    write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'Loss datos globales: {global_test_loss}\n')
+
                     #write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'Entrenamiento {self.agent.epoch} WITH CONSENSUS WEIGHTED: {test_loss_cons_w}')
                     write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'Entrenamiento {self.agent.epoch} WITH NO CONSENSUS: {test_loss_no_cons}\n')
                     
@@ -137,7 +142,9 @@ class Train(CyclicBehaviour):
 
                     #time.sleep(0)
 
-                    self.agent.loss = test_loss
+                    
+
+                    self.agent.loss = global_test_loss
                     #self.agent.loss_cons_w  = test_loss_cons_w
                     
                     self.agent.training_activated = False

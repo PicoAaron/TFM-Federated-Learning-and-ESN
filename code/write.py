@@ -1,5 +1,6 @@
 import numpy as np
 import json
+import os
 
 def write_weights(name, mode, title, weights):
   with open(f'logs/weights/{name}.txt', mode) as f:
@@ -22,5 +23,10 @@ def write_data(name, mode, text):
       f.write(f'{text}\n')'''
 
 def write_data(name, num_experiment, data):
-  with open(f'results/experiment_results/experiment_{num_experiment}/{name}.json', 'w') as file:
+  path = f'results/experiment_results/experiment_{num_experiment}'
+  try:
+    os.mkdir(path)
+  except:
+    pass
+  with open(f'{path}/{name}.json', 'w') as file:
     json.dump(data, file, indent=4)

@@ -116,7 +116,7 @@ def ESN():
     input_shape = (30, 1)
 
     inputs = keras.Input(shape=input_shape)
-    reservoir = esn_layer(100, 0.25, 1, 0.9)(inputs)
+    reservoir = esn_layer(100, 0.2, 1, 0.9)(inputs)
     outputs = keras.layers.Dense(1)(reservoir)
 
     model = keras.Model(inputs=inputs, outputs=outputs)
