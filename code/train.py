@@ -132,7 +132,7 @@ class Train(CyclicBehaviour):
                     #time.sleep(0)
 
                     write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'Entrenamiento {self.agent.epoch}: {test_loss}')
-                    write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'Loss datos globales: {global_test_loss}\n')
+                    #write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'Loss datos globales: {global_test_loss}\n')
 
                     #write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'Entrenamiento {self.agent.epoch} WITH CONSENSUS WEIGHTED: {test_loss_cons_w}')
                     write_evaluation(f'{self.agent.jid}_evaluation', 'a', f'Entrenamiento {self.agent.epoch} WITH NO CONSENSUS: {test_loss_no_cons}\n')

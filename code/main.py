@@ -164,8 +164,8 @@ def prepare_network():
 
     #print(A)
 
-    #global_test_x, global_test_y = sequence_many(data, 5, 30)
-    first = True
+    global_test_x, global_test_y = sequence_many(data, 5, 30)
+    '''first = True
 
     for node in data_network:
         aux_x_train, aux_y_train, aux_x_test, aux_y_test  = wind_data( data, node, 80 )
@@ -176,7 +176,7 @@ def prepare_network():
 
         else:
             global_test_x = np.concatenate([global_test_x, aux_x_test])
-            global_test_y = np.concatenate([global_test_y, aux_y_test])
+            global_test_y = np.concatenate([global_test_y, aux_y_test])'''
 
     for node in data_network:
         neighbors = neighbors_dict[node]
@@ -192,7 +192,7 @@ def prepare_network():
 
         #print(f'{node.lower()}: {neighbors}')
         
-        senderagent = NodeAgent(f'{node.lower()}@localhost', "sender_password", len(A), 5, 5, neighbors, A, x_train, y_train, global_test_x, global_test_y , global_test_x, global_test_y)
+        senderagent = NodeAgent(f'{node.lower()}@localhost', "sender_password", len(A), 5, 5, neighbors, A, x_train, y_train, x_test, y_test , global_test_x, global_test_y)
         agents.append(senderagent)
         senderagent.start()
         #senderagent.web.start(hostname="127.0.0.1", port=f'1000{i}')
@@ -238,7 +238,7 @@ if __name__ == "__main__":
 
     #np.set_printoptions(threshold=sys.maxsize)
 
-    for i in range(5,5+1):
+    for i in range(1,5+1):
         agents = prepare_network()
         print()
         print('Nodes started')

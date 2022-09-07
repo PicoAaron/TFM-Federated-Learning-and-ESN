@@ -17,8 +17,10 @@ def join_results(data):
             subcategory = []
 
             for i in range(len(data[0][category_name][subcategory_name])):
-                step = []
+                step = []   
                 for d in data:
+                    #print(i)
+                    #print(d)
                     step.append(d[category_name][subcategory_name][i])
                 subcategory.append(np.mean(step))
             
@@ -116,21 +118,21 @@ def average_results(path=f'./results/processed_results/', title_1='', title_2=''
     plt.savefig(f'{path}/results_federated.png')
 
     #----------------------------------------------------------
-    '''
-    #plt.plot(results['Federated']['val_loss'])
+    
+    plt.plot(results['Federated']['val_loss'])
     plt.plot(results['No Federated (Local)']['val_loss'])
     plt.title(f'Model loss: FL{title_1} vs ML{title_2}')
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['Federated Learning', 'Local Machine Learning'], loc='upper left')
     plt.savefig(f'{path}/results_FL_ML.png')
-    '''
+    
 
 if __name__ == "__main__":
 
     #process()
 
-    title='FL_global'
+    title='ML_average'
     average_results(path=f'./results/FLvsML/{title}', title_1=f' ({title})', title_2=' (local)')
     
 

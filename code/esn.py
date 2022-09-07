@@ -36,6 +36,12 @@ def replace(n, num):
     return 0
 
 
+def replace2(n):
+  if n>0:
+    return n/2
+  else:
+    return n*2
+
 def process(n):
   return n/3
 
@@ -54,18 +60,24 @@ def structure(weights_list, one_or_zero_first=False, one_or_zero_end=False):
     structures_list = map(weights_list, 1)
     #print(structures_list)
   else:
-    structures_list = weights_list
+    #structures_list = weights_list
+    map = np.vectorize(replace2)
+    structures_list = map(weights_list)
 
   addition = structures_list[0]
   for i in range(1, len(structures_list)):
     addition = np.add(addition, structures_list[i])
-  #print(addition)
+  print(addition)
 
   #return addition
-  map = np.vectorize(threshold)
-  structure_result = map(addition, np.max(addition))
+  
+  structure_result = addition
+
+  
 
   if one_or_zero_end:
+    map = np.vectorize(threshold)
+    structure_result = map(addition, np.max(addition))
     map = np.vectorize(replace)
     structure_result = map(structure_result, 1)
   
@@ -116,7 +128,7 @@ def ESN():
     input_shape = (30, 1)
 
     inputs = keras.Input(shape=input_shape)
-    reservoir = esn_layer(100, 0.2, 1, 0.9)(inputs)
+    reservoir = esn_layer(4, 0.2, 1, 0.9)(inputs)
     outputs = keras.layers.Dense(1)(reservoir)
 
     model = keras.Model(inputs=inputs, outputs=outputs)

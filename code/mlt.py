@@ -88,4 +88,4 @@ def machine_learning(local=False, num_experiment=0):
 if __name__ == "__main__":
     
     for num_experiment in range(1, 5+1):
-        machine_learning(local=True, num_experiment=num_experiment)
+        machine_learning(local=False, num_experiment=num_experiment)

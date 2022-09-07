@@ -300,11 +300,11 @@ class Consensus(CyclicBehaviour):
 
                     
                     if self.agent.round == 1:
-                        self.do_consensus_repeated_links(process_structure=True, one_or_zero_first=True)
+                        self.do_consensus_average_structure(process_structure=True, one_or_zero_first=True)
                     elif self.agent.round == self.agent.rounds_consensus:
-                        self.do_consensus_repeated_links(process_structure=True, one_or_zero_end=True)
+                        self.do_consensus_average_structure(process_structure=True, one_or_zero_end=True)
                     else:
-                        self.do_consensus_repeated_links()
+                        self.do_consensus_average_structure()
                     
                     
                     #self.do_consensus_weighted()
