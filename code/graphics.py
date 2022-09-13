@@ -41,13 +41,15 @@ if __name__ == "__main__":
     plt.plot(data_5['Federated']['val_loss'])
     plt.plot(data_6['Federated']['val_loss'])'''
 
-    plt.plot([11.0398, 5.5378, 4.9438, 4.4759, 4.1753, 3.9754])
-    plt.plot([10.0280, 7.1938, 6.0512, 5.4071, 4.9543, 4.6055])
+    
+
+    plt.plot([9.582002873514211 , 7.491558633832369 , 6.201419468019522 , 5.4632321194106455 , 5.038963781852348 , 4.76593960687226 , 4.567047140411302 , 4.405258244860406 , 4.270188110949947 , 4.157831181264391])
+    #plt.plot([9.720033264160156, 7.812127304077149, 6.793407917022705, 6.112060546875, 5.615701961517334, 5.225644302368164, 4.914515590667724, 4.66768856048584, 4.468250846862793, 4.301808071136475])
 
     plt.title(f'Model loss')
-    plt.ylabel('loss')
+    plt.ylabel('val loss')
     plt.xlabel('epoch')
     #plt.legend(['Repeated Links', 'Best Structure', 'Best Links', 'Machine Learning','Average Structure', 'Original Structure'], loc='upper right')
-    plt.legend(['Federated Learning', 'Machine Learning', 'Best Links', 'Machine Learning','Average Structure', 'Original Structure'], loc='upper left')
+    plt.legend(['Federated Learning', 'Machine Learning'], loc='upper left')
     #plt.savefig(f'results/results_esn_methods.png')
-    plt.savefig(f'results/FL_ML_global.png')
+    plt.savefig(f'results/FL_AEMO.png')

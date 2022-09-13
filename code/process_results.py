@@ -109,7 +109,7 @@ def average_results(path=f'./results/processed_results/', title_1='', title_2=''
 
     # Image
     #----------------------------------------------------------
-
+    '''
     plt.plot(results['Federated']['val_loss'])
     plt.title(f'Federated Learning{title_1}: Model loss')
     plt.ylabel('loss')
@@ -126,13 +126,14 @@ def average_results(path=f'./results/processed_results/', title_1='', title_2=''
     plt.xlabel('epoch')
     plt.legend(['Federated Learning', 'Local Machine Learning'], loc='upper left')
     plt.savefig(f'{path}/results_FL_ML.png')
+    '''
     
 
 if __name__ == "__main__":
 
     #process()
 
-    title='ML_average'
-    average_results(path=f'./results/FLvsML/{title}', title_1=f' ({title})', title_2=' (local)')
+    title='10FL_Red2'
+    average_results(path=f'./results/AEMO_Experiments/{title}', title_1=f' ({title})', title_2=' (local)')
     
 

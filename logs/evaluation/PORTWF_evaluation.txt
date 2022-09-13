@@ -1,0 +1,15 @@
+Inicio
+----------------
+
+Entrenamiento 0: 14.954130172729492
+
+Entrenamiento 1: 10.883550643920898
+
+Entrenamiento 2: 8.633578300476074
+
+Entrenamiento 3: 7.31594705581665
+
+Entrenamiento 4: 6.548199653625488
+
+Entrenamiento 5: 5.957214832305908
+

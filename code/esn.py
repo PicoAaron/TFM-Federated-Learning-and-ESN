@@ -48,22 +48,27 @@ def process(n):
 
 def threshold(n, m):
   if n > m/2:
-    return n
+    return 1
   else:
     return 0
 
 
-def structure(weights_list, one_or_zero_first=False, one_or_zero_end=False):
+def structure(structure):
+  map = np.vectorize(replace)
+  structure_result = map(structure, 1)
+  return structure_result
+
+def structure_antig(weights_list, one_or_zero_first=False, one_or_zero_end=False):
 
   if one_or_zero_first:
     map = np.vectorize(replace)
     structures_list = map(weights_list, 1)
     #print(structures_list)
   else:
-    #structures_list = weights_list
-    map = np.vectorize(replace2)
-    structures_list = map(weights_list)
-
+    structures_list = weights_list
+    #map = np.vectorize(replace2)
+    #structures_list = map(weights_list)
+ 
   addition = structures_list[0]
   for i in range(1, len(structures_list)):
     addition = np.add(addition, structures_list[i])
@@ -71,13 +76,11 @@ def structure(weights_list, one_or_zero_first=False, one_or_zero_end=False):
 
   #return addition
   
-  structure_result = addition
-
-  
+  map = np.vectorize(threshold)
+  structure_result = map(structure_result, np.max(addition))
 
   if one_or_zero_end:
-    map = np.vectorize(threshold)
-    structure_result = map(addition, np.max(addition))
+    
     map = np.vectorize(replace)
     structure_result = map(structure_result, 1)
   
@@ -128,7 +131,7 @@ def ESN():
     input_shape = (30, 1)
 
     inputs = keras.Input(shape=input_shape)
-    reservoir = esn_layer(4, 0.2, 1, 0.9)(inputs)
+    reservoir = esn_layer(100, 0.1, 1, 0.9)(inputs)
     outputs = keras.layers.Dense(1)(reservoir)
 
     model = keras.Model(inputs=inputs, outputs=outputs)

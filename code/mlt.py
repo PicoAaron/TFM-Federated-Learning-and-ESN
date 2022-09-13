@@ -9,7 +9,12 @@ from process_results import process
 
 def machine_learning(local=False, num_experiment=0):
     data = pd.read_csv("data/aemo_2018.csv", sep=',', header=0)
-    nodes = ['ARWF1', 'BALDHWF1', 'BLUFF1', 'BOCORWF1']
+    #nodes = ['ARWF1', 'BALDHWF1', 'BLUFF1', 'BOCORWF1']
+
+
+    with open('data/data_network.json') as file:
+        nodes = json.load(file)
+
 
     first = True
 
@@ -36,7 +41,7 @@ def machine_learning(local=False, num_experiment=0):
         for name in nodes:
             results.update( { name: {'loss': [], 'val_loss': []} } )
 
-        for i in range(10):
+        for i in range(5):
             history = model.fit(x_train,
                                 y_train,
                                 #validation_data = (x_test, y_test),
@@ -44,7 +49,7 @@ def machine_learning(local=False, num_experiment=0):
                                 epochs=1,
                                 verbose=1)
             
-            for name in nodes:
+            '''for name in nodes:
                 _, _, test_node_x, test_node_y = wind_data( data, node, 80 )
                 test_acc, test_loss = test(model, test_node_x, test_node_y)
 
@@ -53,19 +58,23 @@ def machine_learning(local=False, num_experiment=0):
                 vl = results[name]['val_loss']
                 vl.append(test_loss)
 
-                '''
-                print(l)
-                print(vl)
-                print(history.history['loss'][0])
-                print(test_loss)
-                '''
+                
+                #print(l)
+                #print(vl)
+                #print(history.history['loss'][0])
+                #print(test_loss)
+                
 
-                results.update( {name: {'loss': l, 'val_loss': vl } } )
+                results.update( {name: {'loss': l, 'val_loss': vl } } )'''
 
         
         for node in nodes: 
-            data = {'ML (Local)': results[node]}
-            write_data(node, num_experiment, data)
+            _, _, test_node_x, test_node_y = wind_data( data, node, 80 )
+            test_acc, test_loss = test(model, test_node_x, test_node_y)
+            results.update( {node: {'val_loss': [test_loss] } } )
+
+            data_to_write = {'ML': results[node]}
+            write_data(node, num_experiment, data_to_write)
 
 
         process(num_experiment)
@@ -73,19 +82,32 @@ def machine_learning(local=False, num_experiment=0):
 
 
     else:
-        history = model.fit(x_train,
-                            y_train,
-                            validation_data = (x_test, y_test),
-                            steps_per_epoch=100,
-                            epochs=6,
-                            verbose=1)
 
-        data = {'ML':history.history}
+        saved_history = { 'loss': [], 'val_loss': []}
+
+        for epoch in range(10):
+            history = model.fit(x_train,
+                                y_train,
+                                #validation_data = (x_test, y_test),
+                                steps_per_epoch=100,
+                                epochs=1,
+                                verbose=1)
+
+
+            test_acc, test_loss = test(model, x_test, y_test)
+
+            l = saved_history['loss']
+            l.append(history.history['loss'][0])
+            vl = saved_history['val_loss']
+            vl.append(test_loss)
+            saved_history.update( {'loss': l, 'val_loss': vl } )
+
+        data = {'ML': saved_history}
         with open(f'./results/processed_results/results_{num_experiment}.json', 'w') as file:
             json.dump(data, file, indent=4)
     
 
 if __name__ == "__main__":
     
-    for num_experiment in range(1, 5+1):
+    for num_experiment in range(5, 5+1):
         machine_learning(local=False, num_experiment=num_experiment)
