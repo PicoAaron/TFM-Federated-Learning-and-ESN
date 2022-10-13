@@ -174,15 +174,15 @@ def prepare_network():
     
     aemo = pd.read_csv("data/aemo_2018.csv", sep=',', header=0)
 
-    with open('data/data_network.json') as file:
+    with open('data/data_network_small.json') as file:
         data_network = json.load(file)
 
     agents = []
 
-    with open('data/A.json') as file:
+    with open('data/A_small.json') as file:
         A = json.load(file)
 
-    with open('data/neighbors.json') as file:
+    with open('data/neighbors_small.json') as file:
         neighbors = json.load(file)
 
     network = aux_prepare_network(A, data_network, neighbors, aemo)
@@ -318,12 +318,101 @@ def rondas_consenso(model, neighbors, eps, global_test, num_rounds, epoch, train
             write_evaluation(f'{node}_evaluation', 'a', f'Consenso {epoch}: {test_loss}')
 
 
+def join_results(data):
+    # Create the unified results (means of the diferents nodes)
+    #----------------------------------------------------------
+    results = {}
+
+    for category_name in data[0]:
+        category = {}
+
+        for subcategory_name in data[0][category_name]:
+            
+            subcategory = []
+
+            for i in range(len(data[0][category_name][subcategory_name])):
+                step = []   
+                for d in data:
+                    #print(i)
+                    #print(d)
+                    step.append(d[category_name][subcategory_name][i])
+                subcategory.append(np.mean(step))
+            
+            category.update( {subcategory_name: subcategory} )
+
+        results.update( {category_name: category} )
+    
+    return results
+
+
+def average_results(path=f'./results/processed_results/', title_1='', title_2=''):
+    #path = f'./results/processed_results/'
+
+    files = os.listdir(path)
+
+    # Read the results of the experiment
+    #----------------------------------------------------------
+    data = []
+
+    for file_name in files:
+        if file_name != 'results_average.json':
+            try:
+                with open(f'{path}/{file_name}') as file:
+                    #data = json.load(file)
+                    data.append(json.load(file))
+            except:
+                pass
+    
+
+    results = join_results(data)
+    
+    with open(f'{path}/results_average.json', 'w') as file:
+        json.dump(results, file, indent=4)
+
+
+def process(num_experiment):
+    path = f'./results/experiment_results/experiment_{num_experiment}'
+    path_processed = f'./results/processed_results/'
+
+    try:
+        os.mkdir(path_processed)
+    except:
+      pass
+
+    files = os.listdir(path)
+
+    # Read the results of the experiment
+    #----------------------------------------------------------
+    data = []
+
+    for file_name in files:
+        
+        with open(f'{path}/{file_name}') as file:
+            #data = json.load(file)
+            data.append(json.load(file))
+
+    #print(data)
+    #----------------------------------------------------------
+
+    # Create the unified results (means of the diferents nodes)
+    #----------------------------------------------------------
+    
+    results = join_results(data)
+
+    with open(f'{path_processed}/results_{num_experiment}.json', 'w') as file:
+        json.dump(results, file, indent=4)
+
+    with open(f'{path}/results_{num_experiment}.json', 'w') as file:
+        json.dump(results, file, indent=4)
+    #----------------------------------------------------------
+
+
 if __name__ == "__main__":
 
-    experiments=1
-    num_epochs = 2
+    experiments=2
+    num_epochs = 3
     num_rounds = 50
-    train_steps = 50
+    train_steps = 100
 
     #print(json.dumps(neighbors))
 
@@ -341,7 +430,7 @@ if __name__ == "__main__":
 
             train(network['model'], network['train_data'], network['test_data'], network['saved_history'], epoch, train_steps)
 
-            rondas_consenso(network['model'], network['neighbors'], network['eps'], network['global_test'], num_rounds, epoch, steps=train_steps, log=False)
+            rondas_consenso(network['model'], network['neighbors'], network['eps'], network['global_test'], num_rounds, epoch, train_steps, log=False)
 
 
         #train(network['model'], network['train_data'], network['test_data'], network['saved_history'], epoch, train_steps)
@@ -353,4 +442,5 @@ if __name__ == "__main__":
             data = {'Federated': network['saved_history'][node], 'Consenso': {'val_loss': [test_loss]}}
             write_data(f'{node}', num_experiment, data)
 
-        #process(num_experiment)
+        process(num_experiment)
+        average_results()
