@@ -21,6 +21,13 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
+# Parameters
+experiments=1
+num_epochs = 5
+num_rounds = 50
+train_steps = 50
+
+
 # ESN Hiperparameters 
 neurons=100
 connectivity=0.1
@@ -102,14 +109,15 @@ def aux_prepare_network(A, data_network, neighbors, aemo):
     train_data = {}
     test_data = {}
     saved_history = {}
+    consenso_history = {}
 
     for node in data_network:
         x_train, y_train, x_test, y_test  = wind_data( aemo, node, 80 )
 
         train_data.update( {node: {'x': x_train, 'y': y_train} } )
         test_data.update( {node: {'x': x_test, 'y': y_test} } )
-        model.update( {node: ESN()} )
-        saved_history.update( {node:{'loss': [], 'val_loss': [], 'loss_consensus_local': [], 'loss_consensus_global': []}} )
+        model.update( {node: ESN(neurons, connectivity, leaky, spectral_radius, steps, lr)} )
+        saved_history.update( {node:{'loss': [], 'val_loss': [], 'consenso': []}} )
 
     global_test = prepare_global_test(data_network, aemo)
 
@@ -272,7 +280,7 @@ def train(model, train_data, test_data, saved_history, epoch, train_steps):
             val_loss = saved_history[node]['val_loss']
             val_loss.append(test_loss)
 
-            saved_history.update( {node: {'loss': loss, 'val_loss': val_loss}} )
+            saved_history.update( {node: {'loss': loss, 'val_loss': val_loss, 'consenso': saved_history[node]['consenso']}} )
 
             write_weights(f'{node}_weights', 'a', f'Entrenamiento {epoch}', model[node].get_weights())
             write_evaluation(f'{node}_evaluation', 'a', f'Entrenamiento {epoch}: {test_loss}\n')
@@ -299,7 +307,7 @@ def consenso(node, model, neighbors, eps, model_aux, process_structure=False, on
     return wi
 
 
-def rondas_consenso(model, neighbors, eps, global_test, num_rounds, epoch, train_steps=20, log=False ):
+def rondas_consenso(model, neighbors, eps, test, saved_history, num_rounds, epoch, train_steps=20, log=False ):
 
     for round in range(1, num_rounds+1):
         model_aux = model.copy()
@@ -314,8 +322,14 @@ def rondas_consenso(model, neighbors, eps, global_test, num_rounds, epoch, train
         write_weights(f'{node}_weights', 'a', f'Consenso {epoch}', model[node].get_weights())
 
         if log:
-            test_loss, test_acc = model[node].evaluate(global_test['x'], global_test['y'], steps=train_steps)
-            write_evaluation(f'{node}_evaluation', 'a', f'Consenso {epoch}: {test_loss}')
+            test_loss, test_acc = model[node].evaluate(test[node]['x'], test[node]['y'], steps=train_steps)
+
+            loss_consenso = saved_history[node]['consenso']
+            loss_consenso.append(test_loss)
+
+            saved_history.update( {node: {'loss': saved_history[node]['loss'], 'val_loss': saved_history[node]['val_loss'], 'consenso': loss_consenso}} )
+
+            write_evaluation(f'{node}_evaluation', 'a', f'Consenso {epoch}: {loss_consenso}')
 
 
 def join_results(data):
@@ -404,15 +418,9 @@ def process(num_experiment):
 
     with open(f'{path}/results_{num_experiment}.json', 'w') as file:
         json.dump(results, file, indent=4)
-    #----------------------------------------------------------
 
 
 if __name__ == "__main__":
-
-    experiments=2
-    num_epochs = 3
-    num_rounds = 50
-    train_steps = 100
 
     #print(json.dumps(neighbors))
 
@@ -430,16 +438,16 @@ if __name__ == "__main__":
 
             train(network['model'], network['train_data'], network['test_data'], network['saved_history'], epoch, train_steps)
 
-            rondas_consenso(network['model'], network['neighbors'], network['eps'], network['global_test'], num_rounds, epoch, train_steps, log=False)
+            rondas_consenso(network['model'], network['neighbors'], network['eps'], network['test_data'], network['saved_history'], num_rounds, epoch, train_steps, log=True)
 
 
         #train(network['model'], network['train_data'], network['test_data'], network['saved_history'], epoch, train_steps)
 
         for node in network['model']:
-            test_loss, test_acc = network['model'][node].evaluate(network['global_test']['x'], network['global_test']['y'], steps=train_steps)
+            #test_loss, test_acc = network['model'][node].evaluate(network['global_test']['x'], network['global_test']['y'], steps=train_steps)
             #write_evaluation(f'{node}_evaluation', 'a', f'Consenso {epoch}: {test_loss}')
 
-            data = {'Federated': network['saved_history'][node], 'Consenso': {'val_loss': [test_loss]}}
+            data = {'Federated': network['saved_history'][node]}
             write_data(f'{node}', num_experiment, data)
 
         process(num_experiment)
