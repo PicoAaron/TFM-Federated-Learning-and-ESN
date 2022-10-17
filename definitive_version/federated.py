@@ -23,13 +23,13 @@ warnings.filterwarnings('ignore')
 
 # Parameters
 experiments=1
-num_epochs = 5
-num_rounds = 50
-train_steps = 50
+num_epochs = 3
+num_rounds = 500
+train_steps = 30
 
 
 # ESN Hiperparameters 
-neurons=100
+neurons=4
 connectivity=0.1
 leaky=1
 spectral_radius=0.9
@@ -182,7 +182,7 @@ def prepare_network():
     
     aemo = pd.read_csv("data/aemo_2018.csv", sep=',', header=0)
 
-    with open('data/data_network_small.json') as file:
+    with open('data/data_network.json') as file:
         data_network = json.load(file)
 
     agents = []
@@ -422,13 +422,9 @@ def process(num_experiment):
 
 if __name__ == "__main__":
 
-    #print(json.dumps(neighbors))
-
     for num_experiment in range(1, experiments+1):
 
         network = prepare_network()
-
-        #model = repeated_links(model)
         
         for node in network['model']:
             write_weights(f'{node}_weights', 'w', '', '')
@@ -439,9 +435,6 @@ if __name__ == "__main__":
             train(network['model'], network['train_data'], network['test_data'], network['saved_history'], epoch, train_steps)
 
             rondas_consenso(network['model'], network['neighbors'], network['eps'], network['test_data'], network['saved_history'], num_rounds, epoch, train_steps, log=True)
-
-
-        #train(network['model'], network['train_data'], network['test_data'], network['saved_history'], epoch, train_steps)
 
         for node in network['model']:
             #test_loss, test_acc = network['model'][node].evaluate(network['global_test']['x'], network['global_test']['y'], steps=train_steps)

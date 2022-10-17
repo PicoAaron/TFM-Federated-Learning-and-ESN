@@ -2,5 +2,5 @@
     "ARWF1": ["BALDHWF1", "BLUFF1"],
     "BALDHWF1": ["ARWF1", "BLUFF1"],
     "BLUFF1": ["ARWF1", "BALDHWF1", "BOCORWF1"],
-    "BOCORWF1": ["BOCORWF1"]
+    "BOCORWF1": ["BLUFF1"]
 }

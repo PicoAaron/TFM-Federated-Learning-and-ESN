@@ -1,0 +1,308 @@
+{
+    "ARWF1": [
+        "CHALLHWF",
+        "CROWLWF1",
+        "WAUBRAWF",
+        "OAKLAND1"
+    ],
+    "BALDHWF1": [
+        "YSWF1",
+        "MTGELWF1",
+        "MERCER01",
+        "WOOLNTH1"
+    ],
+    "BLUFF1": [
+        "WGWF1",
+        "HALLWF1",
+        "NBHWF1",
+        "HALLWF2"
+    ],
+    "BOCORWF1": [
+        "CAPTL_WF",
+        "WOODLWN1",
+        "CULLRGWF",
+        "GUNNING1"
+    ],
+    "BODWF1": [
+        "TARALGA1",
+        "CROOKWF2",
+        "GULLRWF1",
+        "GUNNING1"
+    ],
+    "CAPTL_WF": [
+        "WOODLWN1",
+        "CULLRGWF",
+        "GUNNING1",
+        "GULLRWF1"
+    ],
+    "CATHROCK": [
+        "MTMILLAR",
+        "WPWF",
+        "SNOWSTH1",
+        "STARHLWF"
+    ],
+    "CHALLHWF": [
+        "ARWF1",
+        "CROWLWF1",
+        "WAUBRAWF",
+        "SALTCRK1"
+    ],
+    "CLEMGPWF": [
+        "SNOWTWN1",
+        "SNOWNTH1",
+        "SNOWSTH1",
+        "HDWF2"
+    ],
+    "CNUNDAWF": [
+        "LKBONNY1",
+        "LKBONNY2",
+        "LKBONNY3",
+        "PORTWF"
+    ],
+    "CROOKWF2": [
+        "GULLRWF1",
+        "GUNNING1",
+        "CULLRGWF",
+        "TARALGA1"
+    ],
+    "CROWLWF1": [
+        "ARWF1",
+        "CHALLHWF",
+        "WAUBRAWF",
+        "OAKLAND1"
+    ],
+    "CULLRGWF": [
+        "GUNNING1",
+        "GULLRWF1",
+        "WOODLWN1",
+        "CROOKWF2"
+    ],
+    "GULLRWF1": [
+        "GUNNING1",
+        "CROOKWF2",
+        "CULLRGWF",
+        "TARALGA1"
+    ],
+    "GUNNING1": [
+        "GULLRWF1",
+        "CULLRGWF",
+        "CROOKWF2",
+        "WOODLWN1"
+    ],
+    "HALLWF1": [
+        "NBHWF1",
+        "BLUFF1",
+        "WGWF1",
+        "HALLWF2"
+    ],
+    "HALLWF2": [
+        "WGWF1",
+        "BLUFF1",
+        "HALLWF1",
+        "NBHWF1"
+    ],
+    "HDWF1": [
+        "HDWF3",
+        "HDWF2",
+        "NBHWF1",
+        "HALLWF1"
+    ],
+    "HDWF2": [
+        "HDWF3",
+        "HDWF1",
+        "NBHWF1",
+        "HALLWF1"
+    ],
+    "HDWF3": [
+        "HDWF1",
+        "HDWF2",
+        "NBHWF1",
+        "HALLWF1"
+    ],
+    "KIATAWF1": [
+        "CROWLWF1",
+        "OAKLAND1",
+        "ARWF1",
+        "MLWF1"
+    ],
+    "LKBONNY1": [
+        "LKBONNY2",
+        "LKBONNY3",
+        "CNUNDAWF",
+        "PORTWF"
+    ],
+    "LKBONNY2": [
+        "LKBONNY1",
+        "LKBONNY3",
+        "CNUNDAWF",
+        "PORTWF"
+    ],
+    "LKBONNY3": [
+        "LKBONNY1",
+        "LKBONNY2",
+        "CNUNDAWF",
+        "PORTWF"
+    ],
+    "MACARTH1": [
+        "YAMBUKWF",
+        "MLWF1",
+        "PORTWF",
+        "OAKLAND1"
+    ],
+    "MERCER01": [
+        "YSWF1",
+        "MTGELWF1",
+        "WAUBRAWF",
+        "CHALLHWF"
+    ],
+    "MEWF1": [
+        "SAPHWF1",
+        "WRWF1",
+        "STWF1",
+        "BODWF1"
+    ],
+    "MLWF1": [
+        "OAKLAND1",
+        "SALTCRK1",
+        "MACARTH1",
+        "YAMBUKWF"
+    ],
+    "MTGELWF1": [
+        "MERCER01",
+        "YSWF1",
+        "WAUBRAWF",
+        "SALTCRK1"
+    ],
+    "MTMILLAR": [
+        "CLEMGPWF",
+        "SNOWTWN1",
+        "SNOWSTH1",
+        "SNOWNTH1"
+    ],
+    "MUSSELR1": [
+        "BALDHWF1",
+        "WOOLNTH1",
+        "BOCORWF1",
+        "YSWF1"
+    ],
+    "NBHWF1": [
+        "HALLWF1",
+        "BLUFF1",
+        "WGWF1",
+        "HDWF3"
+    ],
+    "OAKLAND1": [
+        "MLWF1",
+        "SALTCRK1",
+        "CHALLHWF",
+        "MACARTH1"
+    ],
+    "PORTWF": [
+        "YAMBUKWF",
+        "MACARTH1",
+        "MLWF1",
+        "OAKLAND1"
+    ],
+    "SALTCRK1": [
+        "OAKLAND1",
+        "MLWF1",
+        "CHALLHWF",
+        "ARWF1"
+    ],
+    "SAPHWF1": [
+        "WRWF1",
+        "BODWF1",
+        "TARALGA1",
+        "CROOKWF2"
+    ],
+    "SNOWNTH1": [
+        "SNOWTWN1",
+        "SNOWSTH1",
+        "CLEMGPWF",
+        "HALLWF1"
+    ],
+    "SNOWSTH1": [
+        "SNOWNTH1",
+        "SNOWTWN1",
+        "CLEMGPWF",
+        "HALLWF2"
+    ],
+    "SNOWTWN1": [
+        "SNOWNTH1",
+        "SNOWSTH1",
+        "CLEMGPWF",
+        "HALLWF1"
+    ],
+    "STARHLWF": [
+        "WPWF",
+        "SNOWSTH1",
+        "WATERLWF",
+        "SNOWNTH1"
+    ],
+    "STWF1": [
+        "WGWF1",
+        "BLUFF1",
+        "NBHWF1",
+        "HALLWF1"
+    ],
+    "TARALGA1": [
+        "CROOKWF2",
+        "GULLRWF1",
+        "GUNNING1",
+        "CULLRGWF"
+    ],
+    "WATERLWF": [
+        "HALLWF2",
+        "WGWF1",
+        "BLUFF1",
+        "HALLWF1"
+    ],
+    "WAUBRAWF": [
+        "MERCER01",
+        "CHALLHWF",
+        "ARWF1",
+        "CROWLWF1"
+    ],
+    "WGWF1": [
+        "BLUFF1",
+        "HALLWF1",
+        "HALLWF2",
+        "NBHWF1"
+    ],
+    "WOODLWN1": [
+        "CAPTL_WF",
+        "CULLRGWF",
+        "GUNNING1",
+        "GULLRWF1"
+    ],
+    "WOOLNTH1": [
+        "BALDHWF1",
+        "MTGELWF1",
+        "MERCER01",
+        "YSWF1"
+    ],
+    "WPWF": [
+        "STARHLWF",
+        "SNOWSTH1",
+        "SNOWNTH1",
+        "SNOWTWN1"
+    ],
+    "WRWF1": [
+        "SAPHWF1",
+        "BODWF1",
+        "TARALGA1",
+        "CROOKWF2"
+    ],
+    "YAMBUKWF": [
+        "MACARTH1",
+        "PORTWF",
+        "MLWF1",
+        "OAKLAND1"
+    ],
+    "YSWF1": [
+        "MERCER01",
+        "WAUBRAWF",
+        "MTGELWF1",
+        "CHALLHWF"
+    ]
+}

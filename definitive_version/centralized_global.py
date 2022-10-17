@@ -4,7 +4,7 @@ import os
 import numpy as np
 from federated import wind_data
 from federated import ESN, test
-from federated import write_data, write_evaluation, write_weights
+from federated import write_data
 from federated import process
 
 
@@ -25,7 +25,7 @@ lr=0.05
 def machine_learning(local=False, num_experiment=0):
     data = pd.read_csv("data/aemo_2018.csv", sep=',', header=0)
 
-    with open('data/data_network_small.json') as file:
+    with open('data/data_network.json') as file:
         nodes = json.load(file)
 
     first = True
@@ -47,6 +47,7 @@ def machine_learning(local=False, num_experiment=0):
 
     model = ESN(neurons, connectivity, leaky, spectral_radius, steps, lr)
 
+    # Si queremos que el modelo centralizado global haga predicciones sobre granjas concretas 
     if local:
 
         results = {}
@@ -79,6 +80,8 @@ def machine_learning(local=False, num_experiment=0):
 
         process(num_experiment)
 
+    # Si queremos que el modelo centralizado global haga predcciones sobre el conjunto 
+    # de datos de todas las granjas
     else:
 
         saved_history = { 'loss': [], 'val_loss': []}
