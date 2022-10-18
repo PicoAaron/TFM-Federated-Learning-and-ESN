@@ -11,7 +11,7 @@ from federated import process
 # Parameters
 total_experiments=1
 total_epochs=5
-
+date = '2018-11-01T00:00+10:00'
 
 # ESN Hiperparameters 
 neurons=100
@@ -31,7 +31,7 @@ def machine_learning(local=False, num_experiment=0):
     first = True
 
     for node in nodes:
-        aux_x_train, aux_y_train, aux_x_test, aux_y_test  = wind_data( data, node, 80 )
+        aux_x_train, aux_y_train, aux_x_test, aux_y_test  = wind_data( data, node, date )
         if first:
             x_train = aux_x_train
             y_train = aux_y_train
@@ -64,7 +64,7 @@ def machine_learning(local=False, num_experiment=0):
                                 verbose=1)
             
             for node in nodes:
-                _, _, test_node_x, test_node_y = wind_data( data, node, 80 )
+                _, _, test_node_x, test_node_y = wind_data( data, node, date )
                 test_acc, test_loss = test(model, test_node_x, test_node_y)
 
                 l = results[node]['loss']

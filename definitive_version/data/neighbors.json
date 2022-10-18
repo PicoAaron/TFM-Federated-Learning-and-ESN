@@ -3,19 +3,33 @@
         "CHALLHWF",
         "CROWLWF1",
         "MLWF1",
-        "OAKLAND1"
+        "OAKLAND1",
+        "KIATAWF1",
+        "PORTWF",
+        "SALTCRK1",
+        "WAUBRAWF"
     ],
     "BALDHWF1": [
         "YSWF1",
         "MERCER01",
         "MTGELWF1",
-        "MUSSELR1"
+        "MUSSELR1",
+        "WOOLNTH1"
     ],
     "BLUFF1": [
         "CLEMGPWF",
         "HALLWF1",
         "HALLWF2",
-        "HDWF1"
+        "HDWF1",
+        "HDWF2",
+        "HDWF3",
+        "NBHWF1",
+        "SNOWNTH1",
+        "SNOWSTH1",
+        "SNOWTWN1",
+        "STWF1",
+        "WATERLWF",
+        "WGWF1"
     ],
     "BOCORWF1": [
         "CAPTL_WF",
@@ -33,7 +47,11 @@
         "CROOKWF2",
         "CULLRGWF",
         "GULLRWF1",
-        "GUNNING1"
+        "GUNNING1",
+        "BOCORWF1",
+        "BODWF1",
+        "TARALGA1",
+        "WOODLWN1"
     ],
     "CATHROCK": [
         "MTMILLAR",
@@ -45,72 +63,126 @@
         "ARWF1",
         "CROWLWF1",
         "MERCER01",
-        "MLWF1"
+        "MLWF1",
+        "KIATAWF1",
+        "OAKLAND1",
+        "PORTWF",
+        "SALTCRK1",
+        "WAUBRAWF"
     ],
     "CLEMGPWF": [
         "BLUFF1",
         "HALLWF1",
         "HALLWF2",
-        "HDWF1"
+        "HDWF1",
+        "CATHROCK",
+        "HDWF2",
+        "HDWF3",
+        "MTMILLAR",
+        "NBHWF1",
+        "SNOWNTH1",
+        "SNOWSTH1",
+        "SNOWTWN1",
+        "WATERLWF",
+        "WGWF1",
+        "WPWF"
     ],
     "CNUNDAWF": [
         "LKBONNY1",
         "LKBONNY2",
-        "LKBONNY3"
+        "LKBONNY3",
+        "KIATAWF1"
     ],
     "CROOKWF2": [
         "CAPTL_WF",
         "CULLRGWF",
         "GULLRWF1",
-        "GUNNING1"
+        "GUNNING1",
+        "YSWF1",
+        "BODWF1",
+        "TARALGA1",
+        "WOODLWN1"
     ],
     "CROWLWF1": [
         "ARWF1",
         "CHALLHWF",
         "OAKLAND1",
-        "SALTCRK1"
+        "SALTCRK1",
+        "KIATAWF1",
+        "WAUBRAWF"
     ],
     "CULLRGWF": [
         "CAPTL_WF",
         "CROOKWF2",
         "GULLRWF1",
-        "GUNNING1"
+        "GUNNING1",
+        "BOCORWF1",
+        "BODWF1",
+        "TARALGA1",
+        "WOODLWN1"
     ],
     "GULLRWF1": [
         "CAPTL_WF",
         "CROOKWF2",
         "CULLRGWF",
-        "GUNNING1"
+        "GUNNING1",
+        "BODWF1",
+        "TARALGA1",
+        "WOODLWN1"
     ],
     "GUNNING1": [
         "CAPTL_WF",
         "CROOKWF2",
         "CULLRGWF",
-        "GULLRWF1"
+        "GULLRWF1",
+        "BOCORWF1"
     ],
     "HALLWF1": [
         "BLUFF1",
         "CLEMGPWF",
         "HALLWF2",
-        "HDWF1"
+        "HDWF1",
+        "HDWF2",
+        "HDWF3",
+        "NBHWF1",
+        "SNOWNTH1",
+        "SNOWSTH1",
+        "SNOWTWN1",
+        "STWF1",
+        "WATERLWF",
+        "WGWF1"
     ],
     "HALLWF2": [
         "BLUFF1",
         "CLEMGPWF",
         "HALLWF1",
-        "HDWF1"
+        "HDWF1",
+        "HDWF2",
+        "HDWF3",
+        "NBHWF1",
+        "SNOWNTH1",
+        "SNOWSTH1",
+        "SNOWTWN1",
+        "STWF1",
+        "WATERLWF",
+        "WGWF1",
+        "WPWF"
     ],
     "HDWF1": [
         "BLUFF1",
         "CLEMGPWF",
         "HALLWF1",
-        "HALLWF2"
+        "HALLWF2",
+        "MTMILLAR",
+        "STWF1"
     ],
     "HDWF2": [
         "BLUFF1",
         "CLEMGPWF",
         "HALLWF1",
-        "HALLWF2"
+        "HALLWF2",
+        "SALTCRK1",
+        "MTMILLAR"
     ],
     "HDWF3": [
         "BLUFF1",
@@ -127,8 +199,7 @@
     "LKBONNY1": [
         "CNUNDAWF",
         "LKBONNY2",
-        "LKBONNY3",
-        "HALLWF2"
+        "LKBONNY3"
     ],
     "LKBONNY2": [
         "CNUNDAWF",
@@ -144,13 +215,17 @@
         "MLWF1",
         "OAKLAND1",
         "PORTWF",
-        "SALTCRK1"
+        "SALTCRK1",
+        "YAMBUKWF"
     ],
     "MERCER01": [
         "CHALLHWF",
         "MTGELWF1",
         "WAUBRAWF",
-        "YSWF1"
+        "YSWF1",
+        "WGWF1",
+        "BALDHWF1",
+        "WOOLNTH1"
     ],
     "MEWF1": [
         "SAPHWF1"
@@ -159,19 +234,22 @@
         "ARWF1",
         "CHALLHWF",
         "MACARTH1",
-        "OAKLAND1"
+        "OAKLAND1",
+        "YAMBUKWF"
     ],
     "MTGELWF1": [
         "MERCER01",
         "WAUBRAWF",
         "YSWF1",
-        "CULLRGWF"
+        "BALDHWF1",
+        "WOOLNTH1"
     ],
     "MTMILLAR": [
         "CATHROCK",
         "CLEMGPWF",
         "HDWF1",
-        "HDWF2"
+        "HDWF2",
+        "WPWF"
     ],
     "MUSSELR1": [
         "BALDHWF1"
@@ -187,7 +265,8 @@
         "CHALLHWF",
         "CROWLWF1",
         "MACARTH1",
-        "SAPHWF1"
+        "MLWF1",
+        "YAMBUKWF"
     ],
     "PORTWF": [
         "MACARTH1",
@@ -199,30 +278,39 @@
         "ARWF1",
         "CHALLHWF",
         "CROWLWF1",
-        "MACARTH1"
+        "MACARTH1",
+        "SNOWSTH1",
+        "HDWF2"
     ],
     "SAPHWF1": [
         "WRWF1",
         "WRWF1",
-        "WRWF1"
+        "WRWF1",
+        "MEWF1",
+        "YSWF1"
     ],
     "SNOWNTH1": [
         "BLUFF1",
         "CLEMGPWF",
         "HALLWF1",
-        "HALLWF2"
+        "HALLWF2",
+        "CATHROCK",
+        "STARHLWF"
     ],
     "SNOWSTH1": [
         "BLUFF1",
         "CLEMGPWF",
         "HALLWF1",
-        "HALLWF2"
+        "HALLWF2",
+        "SALTCRK1",
+        "STARHLWF"
     ],
     "SNOWTWN1": [
         "BLUFF1",
         "CLEMGPWF",
         "HALLWF1",
-        "HALLWF2"
+        "HALLWF2",
+        "STARHLWF"
     ],
     "STARHLWF": [
         "WPWF",
@@ -252,19 +340,23 @@
         "ARWF1",
         "CHALLHWF",
         "CROWLWF1",
-        "MERCER01"
+        "MERCER01",
+        "MTGELWF1",
+        "YSWF1"
     ],
     "WGWF1": [
         "BLUFF1",
         "CLEMGPWF",
         "HALLWF1",
-        "HALLWF2"
+        "HALLWF2",
+        "MERCER01"
     ],
     "WOODLWN1": [
         "CAPTL_WF",
         "CROOKWF2",
         "CULLRGWF",
-        "GULLRWF1"
+        "GULLRWF1",
+        "BOCORWF1"
     ],
     "WOOLNTH1": [
         "BALDHWF1",
@@ -292,6 +384,10 @@
     "YSWF1": [
         "MERCER01",
         "MTGELWF1",
-        "WAUBRAWF"
+        "WAUBRAWF",
+        "SAPHWF1",
+        "BALDHWF1",
+        "CROOKWF2",
+        "WOOLNTH1"
     ]
 }

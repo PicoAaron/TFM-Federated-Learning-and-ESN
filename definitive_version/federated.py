@@ -23,9 +23,11 @@ warnings.filterwarnings('ignore')
 
 # Parameters
 experiments=1
-num_epochs = 3
+num_epochs = 2
 num_rounds = 500
+
 train_steps = 30
+date = '2018-11-01T00:00+10:00'
 
 
 # ESN Hiperparameters 
@@ -86,7 +88,7 @@ def calculate_eps(A):
 def prepare_global_test(data_network, aemo):
     first = True
     for node in data_network:
-        _, _, aux_x_test, aux_y_test  = wind_data( aemo, node, 80 )
+        _, _, aux_x_test, aux_y_test  = wind_data( aemo, node, date )
         if first:
             global_test_x = aux_x_test
             global_test_y = aux_y_test
@@ -112,7 +114,7 @@ def aux_prepare_network(A, data_network, neighbors, aemo):
     consenso_history = {}
 
     for node in data_network:
-        x_train, y_train, x_test, y_test  = wind_data( aemo, node, 80 )
+        x_train, y_train, x_test, y_test  = wind_data( aemo, node, date )
 
         train_data.update( {node: {'x': x_train, 'y': y_train} } )
         test_data.update( {node: {'x': x_test, 'y': y_test} } )
@@ -142,40 +144,45 @@ def split_sequence(sequence, n_steps):
 	return X, y
 
 
-def wind_data(df, name, num_train):
+def aux_wind_data(df, name):
+  seq_aux = df[name]
+  
 
-	seq_aux = df[name]
-
-	seq = []
-	for elem in seq_aux:
-		if np.isnan(elem):
-				seq.append(0.0)
-		else:
-			seq.append(elem)
+  seq = []
+  for elem in seq_aux:
+    if np.isnan(elem):
+      seq.append(0.0)
+    else: seq.append(elem)
 	
-	seq_x, seq_y = split_sequence(seq, steps)
+  seq_x, seq_y = split_sequence(seq, steps)
 	
-	x = []
-	y = []
-	zero = [ 0 for i in range(steps)]
-	for i in range(len(seq_x)):
-		if not np.array_equal(seq_x[i], zero):
-			x.append(seq_x[i])
-			y.append(seq_y[i])
+  x = []
+  y = []
+  zero = [ 0 for i in range(steps)]
+  for i in range(len(seq_x)):
+    if not np.array_equal(seq_x[i], zero):
+      x.append(seq_x[i])
+      y.append(seq_y[i])
 
-	x = np.array(x)
-	y = np.array(y)
+  x = np.array(x)
+  y = np.array(y)
 
-	x = x.reshape((x.shape[0], x.shape[1], 1))
+  x = x.reshape((x.shape[0], x.shape[1], 1))
 
-	limit = int(len(x) * num_train / 100)
-	x_train = x[:limit]
-	y_train = y[:limit]
+  return x, y
 
-	x_test = x[limit:]
-	y_test = y[limit:]
 
-	return x_train, y_train, x_test, y_test
+def wind_data(df, name, date):
+
+  df_train = df.loc[df['timestamp'] < date]
+  df_test = df.loc[df['timestamp'] >= date]
+  #df_train.to_csv('train.csv')
+  #df_test.to_csv('test.csv')
+
+  x_train, y_train = aux_wind_data(df_train, name)
+  x_test, y_test = aux_wind_data(df_test, name)
+
+  return x_train, y_train, x_test, y_test
 
 
 def prepare_network():
@@ -187,10 +194,10 @@ def prepare_network():
 
     agents = []
 
-    with open('data/A_small.json') as file:
+    with open('data/A.json') as file:
         A = json.load(file)
 
-    with open('data/neighbors_small.json') as file:
+    with open('data/neighbors.json') as file:
         neighbors = json.load(file)
 
     network = aux_prepare_network(A, data_network, neighbors, aemo)

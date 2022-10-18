@@ -11,6 +11,7 @@ from federated import process
 # Parameters
 total_experiments=1
 total_epochs=1
+date = '2018-11-01T00:00+10:00'
 
 
 # ESN Hiperparameters 
@@ -24,7 +25,7 @@ lr=0.05
 
 def machine_learning(node, num_experiment=0):
 
-    x_train, y_train, x_test, y_test  = wind_data( data, node, 80 )
+    x_train, y_train, x_test, y_test  = wind_data( data, node, date )
 
     model = ESN(neurons, connectivity, leaky, spectral_radius, steps, lr)
 
@@ -62,6 +63,8 @@ if __name__ == "__main__":
 
     with open('data/data_network.json') as file:
         nodes = json.load(file)
+
+    nodes = {'ARWF1': nodes['ARWF1']}
 
     for experiment in range(1, total_experiments+1):
         for node in nodes:
