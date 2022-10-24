@@ -17,6 +17,8 @@ import json
 import os
 import sys
 
+#from prediction import prediction
+
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -24,19 +26,19 @@ warnings.filterwarnings('ignore')
 # Parameters
 experiments=1
 num_epochs = 2
-num_rounds = 500
+num_rounds = 1#500
 
-train_steps = 30
+train_steps = 1#100
 date = '2018-11-01T00:00+10:00'
 
 
 # ESN Hiperparameters 
-neurons=4
+neurons=500
 connectivity=0.1
 leaky=1
 spectral_radius=0.9
-steps=30
-lr=0.05
+steps=24*3
+lr=0.001
 
 
 def esn_layer(units, connectivity, leaky, spectral_radius):
@@ -60,6 +62,7 @@ def esn_layer(units, connectivity, leaky, spectral_radius):
 
 def test(model, test_x, test_y, steps_test=100):
   test_loss, test_acc = model.evaluate(test_x, test_y, steps=steps_test)
+  #test_loss, test_acc = model.evaluate(test_x, test_y)
   return test_acc, test_loss
 
 
@@ -146,7 +149,7 @@ def split_sequence(sequence, n_steps):
 
 def aux_wind_data(df, name):
   seq_aux = df[name]
-  
+
 
   seq = []
   for elem in seq_aux:
@@ -160,9 +163,9 @@ def aux_wind_data(df, name):
   y = []
   zero = [ 0 for i in range(steps)]
   for i in range(len(seq_x)):
-    if not np.array_equal(seq_x[i], zero):
-      x.append(seq_x[i])
-      y.append(seq_y[i])
+    #if not np.array_equal(seq_x[i], zero):
+    x.append(seq_x[i])
+    y.append(seq_y[i])
 
   x = np.array(x)
   y = np.array(y)
@@ -173,11 +176,13 @@ def aux_wind_data(df, name):
 
 
 def wind_data(df, name, date):
+  #df[name] = df[name]/np.linalg.norm(df[name])
 
   df_train = df.loc[df['timestamp'] < date]
   df_test = df.loc[df['timestamp'] >= date]
-  #df_train.to_csv('train.csv')
-  #df_test.to_csv('test.csv')
+
+  df_train.to_csv('train.csv')
+  df_test.to_csv('test.csv')
 
   x_train, y_train = aux_wind_data(df_train, name)
   x_test, y_test = aux_wind_data(df_test, name)
@@ -185,19 +190,19 @@ def wind_data(df, name, date):
   return x_train, y_train, x_test, y_test
 
 
-def prepare_network():
+def prepare_network(data="data/aemo_2018_mean_hour.csv"):
     
-    aemo = pd.read_csv("data/aemo_2018.csv", sep=',', header=0)
+    aemo = pd.read_csv(data, sep=',', header=0)
 
-    with open('data/data_network.json') as file:
+    with open('data/data_network_small.json') as file:
         data_network = json.load(file)
 
     agents = []
 
-    with open('data/A.json') as file:
+    with open('data/A_small.json') as file:
         A = json.load(file)
 
-    with open('data/neighbors.json') as file:
+    with open('data/neighbors_small.json') as file:
         neighbors = json.load(file)
 
     network = aux_prepare_network(A, data_network, neighbors, aemo)
@@ -245,8 +250,8 @@ def write_evaluation(name, mode, text):
     f.write(f'{text}\n')
 
 
-def write_data(name, num_experiment, data):
-  path = f'results/experiment_results/experiment_{num_experiment}'
+def write_data(name, train_type,num_experiment, data):
+  path = f'results/experiment_results/{train_type}/experiment_{num_experiment}'
   file=f'{path}/{name}.json'
   
   try:
@@ -256,6 +261,11 @@ def write_data(name, num_experiment, data):
 
   try:
     os.mkdir('results/experiment_results')
+  except:
+    pass
+
+  try:
+    os.mkdir(f'results/experiment_results/{train_type}')
   except:
     pass
 
@@ -366,8 +376,10 @@ def join_results(data):
     return results
 
 
-def average_results(path=f'./results/processed_results/', title_1='', title_2=''):
+def average_results(path=f'./results/processed_results/', train_type='federated', title_1='', title_2=''):
     #path = f'./results/processed_results/'
+
+    path = path + train_type
 
     files = os.listdir(path)
 
@@ -391,10 +403,15 @@ def average_results(path=f'./results/processed_results/', title_1='', title_2=''
         json.dump(results, file, indent=4)
 
 
-def process(num_experiment):
-    path = f'./results/experiment_results/experiment_{num_experiment}'
-    path_processed = f'./results/processed_results/'
+def process(num_experiment, train_type):
+  
+    path = f'./results/experiment_results/{train_type}/experiment_{num_experiment}'
+    path_processed = f'./results/processed_results/{train_type}'
 
+    try:
+        os.mkdir('/results/processed_results')
+    except:
+      pass
     try:
         os.mkdir(path_processed)
     except:
@@ -423,15 +440,16 @@ def process(num_experiment):
     with open(f'{path_processed}/results_{num_experiment}.json', 'w') as file:
         json.dump(results, file, indent=4)
 
-    with open(f'{path}/results_{num_experiment}.json', 'w') as file:
-        json.dump(results, file, indent=4)
-
+    #with open(f'{path}/results_{num_experiment}.json', 'w') as file:
+        #json.dump(results, file, indent=4)
+  
 
 if __name__ == "__main__":
+  
 
     for num_experiment in range(1, experiments+1):
 
-        network = prepare_network()
+        network = prepare_network(data="data/aemo_2018_mean_hour.csv")
         
         for node in network['model']:
             write_weights(f'{node}_weights', 'w', '', '')
@@ -448,7 +466,28 @@ if __name__ == "__main__":
             #write_evaluation(f'{node}_evaluation', 'a', f'Consenso {epoch}: {test_loss}')
 
             data = {'Federated': network['saved_history'][node]}
-            write_data(f'{node}', num_experiment, data)
+            write_data(f'{node}', 'federated',num_experiment, data)
 
-        process(num_experiment)
-        average_results()
+        process(num_experiment, 'federated')
+        average_results(train_type='federated')
+
+        try:
+            os.mkdir('model')
+        except:
+            pass
+        try:
+            os.mkdir(f'model/federated')
+        except:
+            pass
+        try:
+            os.mkdir(f'model/federated/experiment_{num_experiment}')
+        except:
+            pass
+
+        print(network['model'])
+        model = network['model']['ARWF1']
+        model.save(f'model/federated/experiment_{num_experiment}/federated.h5')
+
+        parameters = {'train_type': 'federated', 'steps': steps, 'separation_date':date}
+        with open(f'model/federated/parameters.json', 'w') as file:
+            json.dump(parameters, file, indent=4)

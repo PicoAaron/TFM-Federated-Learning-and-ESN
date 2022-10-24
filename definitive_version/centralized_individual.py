@@ -4,23 +4,25 @@ import os
 import numpy as np
 from federated import wind_data
 from federated import ESN, test
-from federated import write_data, write_evaluation, write_weights
-from federated import process
-
+from federated import write_data
+from federated import process, average_results
+from prediction import prediction
+import matplotlib.pyplot as plt
 
 # Parameters
 total_experiments=1
-total_epochs=1
+total_epochs=15
 date = '2018-11-01T00:00+10:00'
+train_steps = 1000
 
 
 # ESN Hiperparameters 
-neurons=100
+neurons=500
 connectivity=0.1
 leaky=1
 spectral_radius=0.9
-steps=30
-lr=0.05
+steps=24*3
+lr=0.005
 
 
 def machine_learning(node, num_experiment=0):
@@ -38,10 +40,9 @@ def machine_learning(node, num_experiment=0):
         history = model.fit(x_train,
                             y_train,
                             #validation_data = (x_test, y_test),
-                            steps_per_epoch=100,
+                            steps_per_epoch=train_steps,
                             epochs=1,
                             verbose=1)
-    
     
         test_acc, test_loss = test(model, x_test, y_test)
 
@@ -52,23 +53,64 @@ def machine_learning(node, num_experiment=0):
 
         results.update( {node: {'loss': l, 'val_loss': vl } } )
 
+    data_to_write = {'Centralized Individual': results[node]}
+    write_data(node, 'centralized_individual',num_experiment, data_to_write)
 
-    data_to_write = {'ML': results[node]}
-    write_data(node, num_experiment, data_to_write)
+    #prediction(model, x_train, y_train, y_test)
+    return model
 
     
 if __name__ == "__main__":
     
-    data = pd.read_csv("data/aemo_2018.csv", sep=',', header=0)
+    data = pd.read_csv("data/aemo_2018_mean_hour.csv", sep=',', header=0)
 
     with open('data/data_network.json') as file:
         nodes = json.load(file)
 
     nodes = {'ARWF1': nodes['ARWF1']}
 
-    for experiment in range(1, total_experiments+1):
-        for node in nodes:
-            machine_learning(node, num_experiment=experiment)
+    try:
+        os.mkdir('model')
+    except:
+        pass
+    try:
+        os.mkdir(f'model/centralized_global')
+    except:
+        pass
 
+    for experiment in range(1, total_experiments+1):
+        try:
+            os.mkdir(f'model/centralized_individual/experiment_{experiment}')
+        except:
+            pass
+
+        for node in nodes:
+            model = machine_learning(node, num_experiment=experiment)
+
+            model.save(f'model/centralized_individual/experiment_{experiment}/centralized_individual_{node}.h5')
+
+            parameters = {'train_type': 'centralized_individual', 'steps': steps, 'separation_date':date}
+            with open(f'model/centralized_individual/parameters.json', 'w') as file:
+                json.dump(parameters, file, indent=4)
         
-        process(experiment)
+        process(experiment, 'centralized_individual')
+        average_results(train_type='centralized_individual')
+
+'''
+    print(data['ARWF1'])
+    data = np.array(data['ARWF1'])
+    print(data)
+
+    
+    x_average = np.convolve(data, np.ones(7), 'valid') / 7
+
+    print(len(x_average))
+
+    plt.figure(figsize=(15, 6))
+    #plt.plot(data)
+    #plt.plot(x_average_dia)
+    plt.plot(x_average)
+    
+
+    plt.savefig(f'results/prediction_average.png')
+'''
