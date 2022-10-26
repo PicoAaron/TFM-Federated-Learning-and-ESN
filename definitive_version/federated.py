@@ -25,20 +25,20 @@ warnings.filterwarnings('ignore')
 
 # Parameters
 experiments=1
-num_epochs = 2
-num_rounds = 1#500
+num_epochs = 15
+num_rounds = 500
 
-train_steps = 1#100
+train_steps = 500
 date = '2018-11-01T00:00+10:00'
 
 
 # ESN Hiperparameters 
-neurons=500
+neurons=100
 connectivity=0.1
 leaky=1
 spectral_radius=0.9
-steps=24*3
-lr=0.001
+steps=24
+lr=0.005
 
 
 def esn_layer(units, connectivity, leaky, spectral_radius):
@@ -61,7 +61,7 @@ def esn_layer(units, connectivity, leaky, spectral_radius):
 
 
 def test(model, test_x, test_y, steps_test=100):
-  test_loss, test_acc = model.evaluate(test_x, test_y, steps=steps_test)
+  test_loss, test_acc, mse, mae = model.evaluate(test_x, test_y, steps=steps_test)
   #test_loss, test_acc = model.evaluate(test_x, test_y)
   return test_acc, test_loss
 
@@ -77,7 +77,7 @@ def ESN(neurons=100, connectivity=0.1, leaky=1, spectral_radius=0.9, steps=30, l
     model = keras.Model(inputs=inputs, outputs=outputs)
 
     optimizer=Adam(learning_rate=lr)
-    model.compile(optimizer=optimizer, loss='mae', metrics='accuracy')
+    model.compile(optimizer=optimizer, loss='mae', metrics=['accuracy', 'mse', 'mae'])
 
     return model
 
@@ -149,8 +149,7 @@ def split_sequence(sequence, n_steps):
 
 def aux_wind_data(df, name):
   seq_aux = df[name]
-
-
+  
   seq = []
   for elem in seq_aux:
     if np.isnan(elem):
@@ -158,15 +157,15 @@ def aux_wind_data(df, name):
     else: seq.append(elem)
 	
   seq_x, seq_y = split_sequence(seq, steps)
-	
+
   x = []
   y = []
-  zero = [ 0 for i in range(steps)]
+  #zero = [ 0 for i in range(steps)]
   for i in range(len(seq_x)):
     #if not np.array_equal(seq_x[i], zero):
     x.append(seq_x[i])
     y.append(seq_y[i])
-
+  
   x = np.array(x)
   y = np.array(y)
 
@@ -194,15 +193,15 @@ def prepare_network(data="data/aemo_2018_mean_hour.csv"):
     
     aemo = pd.read_csv(data, sep=',', header=0)
 
-    with open('data/data_network_small.json') as file:
+    with open('data/data_network.json') as file:
         data_network = json.load(file)
 
     agents = []
 
-    with open('data/A_small.json') as file:
+    with open('data/A.json') as file:
         A = json.load(file)
 
-    with open('data/neighbors_small.json') as file:
+    with open('data/neighbors.json') as file:
         neighbors = json.load(file)
 
     network = aux_prepare_network(A, data_network, neighbors, aemo)
@@ -289,18 +288,28 @@ def train(model, train_data, test_data, saved_history, epoch, train_steps):
                 verbose=1
             )
 
-            test_loss, test_acc = model[node].evaluate(test_data[node]['x'], test_data[node]['y'], steps=train_steps)
+            #test_loss, test_acc = model[node].evaluate(test_data[node]['x'], test_data[node]['y'])
 
             loss = saved_history[node]['loss']
             loss.append(history.history['loss'][-1])
 
-            val_loss = saved_history[node]['val_loss']
-            val_loss.append(test_loss)
+            mse = saved_history[node]['mse']
+            #mse.append(history.history['mse'][-1])
 
-            saved_history.update( {node: {'loss': loss, 'val_loss': val_loss, 'consenso': saved_history[node]['consenso']}} )
+            mae = saved_history[node]['mae']
+            #mae.append(history.history['mae'][-1])
 
+            accuracy = saved_history[node]['accuracy']
+            #accuracy.append(history.history['accuracy'][-1])
+
+            #val_loss = saved_history[node]['val_loss']
+            #val_loss.append(test_loss)
+
+            #saved_history.update( {node: {'loss': loss, 'val_loss': val_loss, 'consenso': saved_history[node]['consenso']}} )
+            saved_history.update( {node: {'loss': loss, 'consenso': saved_history[node]['consenso'], 'mse': mse, 'mae': mae, 'accuracy': accuracy}} )
+            
             write_weights(f'{node}_weights', 'a', f'Entrenamiento {epoch}', model[node].get_weights())
-            write_evaluation(f'{node}_evaluation', 'a', f'Entrenamiento {epoch}: {test_loss}\n')
+            #write_evaluation(f'{node}_evaluation', 'a', f'Entrenamiento {epoch}: {test_loss}\n')
 
 
 def consenso(node, model, neighbors, eps, model_aux, process_structure=False, one_or_zero_first=False, one_or_zero_end=False):
@@ -339,14 +348,27 @@ def rondas_consenso(model, neighbors, eps, test, saved_history, num_rounds, epoc
         write_weights(f'{node}_weights', 'a', f'Consenso {epoch}', model[node].get_weights())
 
         if log:
-            test_loss, test_acc = model[node].evaluate(test[node]['x'], test[node]['y'], steps=train_steps)
+            test_loss, test_acc, test_mse, test_mae = model[node].evaluate(test[node]['x'], test[node]['y'], steps=100)
 
             loss_consenso = saved_history[node]['consenso']
             loss_consenso.append(test_loss)
 
-            saved_history.update( {node: {'loss': saved_history[node]['loss'], 'val_loss': saved_history[node]['val_loss'], 'consenso': loss_consenso}} )
+            mse = saved_history[node]['mse']
+            mse.append(test_mse)
 
-            write_evaluation(f'{node}_evaluation', 'a', f'Consenso {epoch}: {loss_consenso}')
+            mae = saved_history[node]['mae']
+            mae.append(test_mae)
+
+            accuracy = saved_history[node]['accuracy']
+            accuracy.append(test_acc)
+
+
+            saved_history.update( {node: {'loss': saved_history[node]['loss'], 'consenso': loss_consenso, 'mse': mse, 'mae': mae, 'accuracy': accuracy}} )
+
+            write_evaluation(f'{node}_evaluation', 'a', f'Consenso {epoch}: {test_loss}')
+            
+            data = {'Federated': network['saved_history'][node]}
+            write_data(f'{node}', 'federated',num_experiment, data)
 
 
 def join_results(data):
@@ -409,7 +431,7 @@ def process(num_experiment, train_type):
     path_processed = f'./results/processed_results/{train_type}'
 
     try:
-        os.mkdir('/results/processed_results')
+        os.mkdir('results/processed_results')
     except:
       pass
     try:
@@ -449,45 +471,54 @@ if __name__ == "__main__":
 
     for num_experiment in range(1, experiments+1):
 
-        network = prepare_network(data="data/aemo_2018_mean_hour.csv")
-        
-        for node in network['model']:
-            write_weights(f'{node}_weights', 'w', '', '')
-            write_evaluation(f'{node}_evaluation', 'w', f'Inicio\n----------------\n')
+      network = prepare_network(data="data/aemo_2018_mean_hour.csv")
+      
+      for node in network['model']:
+          write_weights(f'{node}_weights', 'w', '', '')
+          write_evaluation(f'{node}_evaluation', 'w', f'Inicio\n----------------\n')
 
-        for epoch in range(num_epochs):
+      for epoch in range(num_epochs):
 
-            train(network['model'], network['train_data'], network['test_data'], network['saved_history'], epoch, train_steps)
+          train(network['model'], network['train_data'], network['test_data'], network['saved_history'], epoch, train_steps)
 
-            rondas_consenso(network['model'], network['neighbors'], network['eps'], network['test_data'], network['saved_history'], num_rounds, epoch, train_steps, log=True)
+          rondas_consenso(network['model'], network['neighbors'], network['eps'], network['test_data'], network['saved_history'], num_rounds, epoch, train_steps, log=True)
 
-        for node in network['model']:
-            #test_loss, test_acc = network['model'][node].evaluate(network['global_test']['x'], network['global_test']['y'], steps=train_steps)
-            #write_evaluation(f'{node}_evaluation', 'a', f'Consenso {epoch}: {test_loss}')
+      for node in network['model']:
+          #test_loss, test_acc = network['model'][node].evaluate(network['global_test']['x'], network['global_test']['y'], steps=train_steps)
+          #write_evaluation(f'{node}_evaluation', 'a', f'Consenso {epoch}: {test_loss}')
 
-            data = {'Federated': network['saved_history'][node]}
-            write_data(f'{node}', 'federated',num_experiment, data)
+          data = {'Federated': network['saved_history'][node]}
+          write_data(f'{node}', 'federated',num_experiment, data)
 
-        process(num_experiment, 'federated')
-        average_results(train_type='federated')
+      
 
-        try:
-            os.mkdir('model')
-        except:
-            pass
-        try:
-            os.mkdir(f'model/federated')
-        except:
-            pass
-        try:
-            os.mkdir(f'model/federated/experiment_{num_experiment}')
-        except:
-            pass
+      try:
+          os.mkdir('model')
+      except:
+          pass
+      try:
+          os.mkdir(f'model/federated')
+      except:
+          pass
+      try:
+          os.mkdir(f'model/federated/experiment_{num_experiment}')
+      except:
+          pass
 
-        print(network['model'])
-        model = network['model']['ARWF1']
-        model.save(f'model/federated/experiment_{num_experiment}/federated.h5')
+      model = network['model']['ARWF1']
+      model.save(f'model/federated/experiment_{num_experiment}/federated.h5')
 
-        parameters = {'train_type': 'federated', 'steps': steps, 'separation_date':date}
-        with open(f'model/federated/parameters.json', 'w') as file:
-            json.dump(parameters, file, indent=4)
+      parameters = {'train_type': 'federated',
+                      'neurons': neurons, 
+                      'train_steps': train_steps, 
+                      'epochs': num_epochs,
+                      'learning_rate': lr,
+                      'steps': steps, 
+                      'rounds_consensus': num_rounds,
+                      'separation_date':date}
+      with open(f'model/federated/parameters.json', 'w') as file:
+          json.dump(parameters, file, indent=4)
+
+
+      process(num_experiment, 'federated')
+    average_results(train_type='federated')

@@ -1,5 +1,5 @@
 {
     "train_type": "centralized_individual",
-    "steps": 72,
+    "steps": 144,
     "separation_date": "2018-11-01T00:00+10:00"
 }

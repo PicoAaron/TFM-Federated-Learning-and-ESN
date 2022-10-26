@@ -1,5 +1,9 @@
 {
     "train_type": "centralized_global",
-    "steps": 72,
+    "neurons": 100,
+    "train_steps": 500,
+    "epochs": 15,
+    "learning_rate": 0.005,
+    "steps": 12,
     "separation_date": "2018-11-01T00:00+10:00"
 }

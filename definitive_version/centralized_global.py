@@ -11,16 +11,16 @@ from prediction import prediction
 
 # Parameters
 total_experiments=1
-total_epochs= 15
+total_epochs= 25
 date = '2018-11-01T00:00+10:00'
 train_steps=100
 
 # ESN Hiperparameters 
-neurons=500
+neurons=100
 connectivity=0.1
 leaky=1
 spectral_radius=0.9
-steps=24*3
+steps=24
 lr=0.005
 
 
@@ -55,7 +55,7 @@ def machine_learning(local=False, num_experiment=0):
 
         results = {}
         for node in nodes:
-            results.update( { node: {'loss': [], 'val_loss': []} } )
+            results.update( { node: {'loss': [], 'val_loss': [], 'mse': [], 'mae': [], 'accuracy': [] } } )
 
         for epoch in range(total_epochs):
             print(f'Epoch: {epoch}')
@@ -68,20 +68,31 @@ def machine_learning(local=False, num_experiment=0):
             
             for node in nodes:
                 _, _, test_node_x, test_node_y = wind_data( data, node, date )
-                test_acc, test_loss = test(model, test_node_x, test_node_y)
+                #test_acc, test_loss, test_mse, test_mae,  = test(model, test_node_x, test_node_y)
+                test_loss, test_acc, test_mse, test_mae = model.evaluate(test_node_x, test_node_y, steps=100)
 
                 l = results[node]['loss']
                 l.append(history.history['loss'][0])
+
                 vl = results[node]['val_loss']
                 vl.append(test_loss)
 
-                results.update( {node: {'loss': l, 'val_loss': vl } } )
+                mse = results[node]['mse']
+                mse.append(test_mse)
+
+                mae = results[node]['mae']
+                mae.append(test_mae)
+
+                accuracy = results[node]['accuracy']
+                accuracy.append(test_acc)
+
+                results.update( {node: {'loss': l, 'val_loss': vl, 'mse': mse, 'mae': mae, 'accuracy': accuracy } } )
      
         for node in nodes: 
             data_to_write = {'centralized_global': results[node]}
             write_data(node, 'centralized_global', num_experiment, data_to_write)
 
-        process(num_experiment)
+        #process(num_experiment)
 
         return model
 
@@ -89,7 +100,7 @@ def machine_learning(local=False, num_experiment=0):
     # de datos de todas las granjas
     else:
 
-        saved_history = { 'loss': [], 'val_loss': []}
+        saved_history = { 'loss': [], 'val_loss': [], 'mse': [], 'mae': [], 'accuracy': []}
 
         for epoch in range(total_epochs):
             print(f'Epoch: {epoch}')
@@ -101,16 +112,28 @@ def machine_learning(local=False, num_experiment=0):
                                 verbose=1)
 
 
-            test_acc, test_loss = test(model, x_test, y_test, 100)
+            #test_acc, test_loss = test(model, x_test, y_test, 100)
+            test_loss, test_acc, test_mse, test_mae = model.evaluate(test_node_x, test_node_y, steps=100)
 
             l = saved_history['loss']
             l.append(history.history['loss'][0])
+
             vl = saved_history['val_loss']
             vl.append(test_loss)
-            saved_history.update( {'loss': l, 'val_loss': vl } )
+
+            mse = saved_history[node]['mse']
+            mse.append(test_mse)
+
+            mae = saved_history[node]['mae']
+            mae.append(test_mae)
+
+            accuracy = saved_history[node]['accuracy']
+            accuracy.append(test_acc)
+
+            saved_history.update( {'loss': l, 'val_loss': vl, 'mse': mse, 'mae': mae, 'accuracy': accuracy} )
 
         data_to_write = {'centralized_global': saved_history}
-        write_data(node, 'centralized_global', num_experiment, data_to_write)
+        write_data('centralized_global', 'centralized_global', num_experiment, data_to_write)
 
         return model
     
@@ -118,7 +141,7 @@ def machine_learning(local=False, num_experiment=0):
 if __name__ == "__main__":
     
     for experiment in range(1, total_experiments+1):
-        model = machine_learning(local=False, num_experiment=experiment)
+        model = machine_learning(local=True, num_experiment=experiment)
 
 
         try:
@@ -136,12 +159,19 @@ if __name__ == "__main__":
 
         model.save(f'model/centralized_global/experiment_{experiment}/centralized_global.h5')
 
-        parameters = {'train_type': 'centralized_global', 'steps': steps, 'separation_date':date}
+        parameters = {'train_type': 'centralized_global',
+                        'neurons': neurons,
+                        'connectivity': connectivity,
+                        'leaky': leaky,
+                        'spectral_radius': spectral_radius,
+                        'train_steps': train_steps, 
+                        'epochs': total_epochs,
+                        'learning_rate': lr,
+                        'steps': steps, 
+                        'separation_date':date}
         with open(f'model/centralized_global/parameters.json', 'w') as file:
             json.dump(parameters, file, indent=4)
 
-    process(experiment, 'centralized_global')
+        process(experiment, 'centralized_global')
     average_results(train_type='centralized_global')
-        
-
         

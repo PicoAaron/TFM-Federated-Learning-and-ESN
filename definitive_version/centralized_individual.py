@@ -13,15 +13,15 @@ import matplotlib.pyplot as plt
 total_experiments=1
 total_epochs=15
 date = '2018-11-01T00:00+10:00'
-train_steps = 1000
+train_steps = 500
 
 
 # ESN Hiperparameters 
-neurons=500
+neurons=100
 connectivity=0.1
 leaky=1
 spectral_radius=0.9
-steps=24*3
+steps=24
 lr=0.005
 
 
@@ -94,7 +94,7 @@ if __name__ == "__main__":
                 json.dump(parameters, file, indent=4)
         
         process(experiment, 'centralized_individual')
-        average_results(train_type='centralized_individual')
+    average_results(train_type='centralized_individual')
 
 '''
     print(data['ARWF1'])

@@ -1,5 +1,10 @@
 {
     "train_type": "federated",
-    "steps": 72,
+    "neurons": 100,
+    "train_steps": 500,
+    "epochs": 15,
+    "learning_rate": 0.005,
+    "steps": 12,
+    "rounds_consensus": 500,
     "separation_date": "2018-11-01T00:00+10:00"
 }
