@@ -11,9 +11,9 @@ import matplotlib.pyplot as plt
 
 # Parameters
 total_experiments=1
-total_epochs=15
+total_epochs=25
 date = '2018-11-01T00:00+10:00'
-train_steps = 500
+train_steps = 100
 
 
 # ESN Hiperparameters 
@@ -32,7 +32,7 @@ def machine_learning(node, num_experiment=0):
     model = ESN(neurons, connectivity, leaky, spectral_radius, steps, lr)
 
     results = {}
-    results.update( { node: {'loss': [], 'val_loss': []} } )
+    results.update( { node: {'loss': [], 'val_loss': [], 'mse': [], 'mae': [], 'accuracy': [] } } )
 
     for epoch in range(total_epochs):
         print()
@@ -44,14 +44,25 @@ def machine_learning(node, num_experiment=0):
                             epochs=1,
                             verbose=1)
     
-        test_acc, test_loss = test(model, x_test, y_test)
+        #test_acc, test_loss = test(model, x_test, y_test)
+        test_loss, test_acc, test_mse, test_mae = model.evaluate(x_test, y_test, steps=100)
 
         l = results[node]['loss']
         l.append(history.history['loss'][0])
+
         vl = results[node]['val_loss']
         vl.append(test_loss)
 
-        results.update( {node: {'loss': l, 'val_loss': vl } } )
+        mse = results[node]['mse']
+        mse.append(test_mse)
+
+        mae = results[node]['mae']
+        mae.append(test_mae)
+
+        accuracy = results[node]['accuracy']
+        accuracy.append(test_acc)
+
+        results.update( {node: {'loss': l, 'val_loss': vl, 'mse': mse, 'mae': mae, 'accuracy': accuracy } } )
 
     data_to_write = {'Centralized Individual': results[node]}
     write_data(node, 'centralized_individual',num_experiment, data_to_write)
@@ -67,7 +78,7 @@ if __name__ == "__main__":
     with open('data/data_network.json') as file:
         nodes = json.load(file)
 
-    nodes = {'ARWF1': nodes['ARWF1']}
+    #nodes = {'ARWF1': nodes['ARWF1']}
 
     try:
         os.mkdir('model')

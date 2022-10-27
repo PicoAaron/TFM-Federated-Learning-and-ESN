@@ -25,10 +25,10 @@ warnings.filterwarnings('ignore')
 
 # Parameters
 experiments=1
-num_epochs = 15
+num_epochs = 25
 num_rounds = 500
 
-train_steps = 500
+train_steps = 100
 date = '2018-11-01T00:00+10:00'
 
 
@@ -122,7 +122,7 @@ def aux_prepare_network(A, data_network, neighbors, aemo):
         train_data.update( {node: {'x': x_train, 'y': y_train} } )
         test_data.update( {node: {'x': x_test, 'y': y_test} } )
         model.update( {node: ESN(neurons, connectivity, leaky, spectral_radius, steps, lr)} )
-        saved_history.update( {node:{'loss': [], 'val_loss': [], 'consenso': []}} )
+        saved_history.update( {node:{'loss': [], 'val_loss': [], 'consenso': [], 'mse': [], 'mae': [], 'accuracy': []}} )
 
     global_test = prepare_global_test(data_network, aemo)
 
