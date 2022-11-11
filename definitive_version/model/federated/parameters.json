@@ -2,7 +2,7 @@
     "train_type": "federated",
     "neurons": 100,
     "train_steps": 100,
-    "epochs": 25,
+    "epochs": 50,
     "learning_rate": 0.005,
     "steps": 24,
     "rounds_consensus": 500,

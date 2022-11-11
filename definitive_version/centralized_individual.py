@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 # Parameters
 total_experiments=1
-total_epochs=25
+total_epochs=50
 date = '2018-11-01T00:00+10:00'
 train_steps = 100
 
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     with open('data/data_network.json') as file:
         nodes = json.load(file)
 
-    #nodes = {'ARWF1': nodes['ARWF1']}
+    nodes = {'ARWF1': nodes['ARWF1']}
 
     try:
         os.mkdir('model')

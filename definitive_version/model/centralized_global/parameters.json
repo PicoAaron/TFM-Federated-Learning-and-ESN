@@ -5,7 +5,7 @@
     "leaky": 1,
     "spectral_radius": 0.9,
     "train_steps": 100,
-    "epochs": 25,
+    "epochs": 50,
     "learning_rate": 0.005,
     "steps": 24,
     "separation_date": "2018-11-01T00:00+10:00"

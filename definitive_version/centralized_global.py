@@ -11,7 +11,7 @@ from prediction import prediction
 
 # Parameters
 total_experiments=1
-total_epochs= 25
+total_epochs= 50
 date = '2018-11-01T00:00+10:00'
 train_steps=100
 

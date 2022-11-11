@@ -25,7 +25,7 @@ warnings.filterwarnings('ignore')
 
 # Parameters
 experiments=1
-num_epochs = 25
+num_epochs = 50
 num_rounds = 500
 
 train_steps = 100
@@ -77,7 +77,7 @@ def ESN(neurons=100, connectivity=0.1, leaky=1, spectral_radius=0.9, steps=30, l
     model = keras.Model(inputs=inputs, outputs=outputs)
 
     optimizer=Adam(learning_rate=lr)
-    model.compile(optimizer=optimizer, loss='mae', metrics=['accuracy', 'mse', 'mae'])
+    model.compile(optimizer=optimizer, loss='mse', metrics=['accuracy', 'mse', 'mae'])
 
     return model
 
